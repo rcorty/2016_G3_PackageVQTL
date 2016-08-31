@@ -1,6 +1,21 @@
 {
     "debugBreakpointsState" : {
         "breakpoints" : [
+            {
+                "editor_line_number" : 84,
+                "editor_state" : 1,
+                "function_name" : "permute.QTL.terms_",
+                "function_steps" : "2",
+                "id" : 0,
+                "is_package_breakpoint" : true,
+                "is_pending_debug_completion" : false,
+                "line_number" : 84,
+                "needs_updated_steps" : false,
+                "package_name" : "vqtl",
+                "path" : "~/Dropbox (ValdarLab)/Aim1/vqtl/R/utils_dglm.R",
+                "state" : 1,
+                "type" : 0
+            }
         ]
     }
 }

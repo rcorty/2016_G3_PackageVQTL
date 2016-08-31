@@ -4,12 +4,13 @@
 
 \usepackage{bm}
 \usepackage{tabu}
-\usepackage{subfigmat}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \input{styles/Corty2015commands}
 
-\title{\texttt{vqtl}: An \texttt{R} package for Efficient QTL Mapping on Phenotypes with Heterogeneous Variance}
+\title{\texttt{vqtl}: An \texttt{R} package for QTL Mapping on Phenotypes with Heterogeneous Variance}
 
 \author[$\ast$]{Robert W. Corty}
 \author[$\ast, 1$]{William Valdar}
@@ -22,11 +23,13 @@
 \setboolean{displaycopyright}{true}
 
 \begin{abstract}
-Existing methods for QTL mapping in experimental crosses assume that the extent of residual variation is constant across all individuals.
-When this assumption is not met, the simultaneous mean-variance modeling approach described in the companion article can yield higher power, better protection against false positives, and detection of the rarely-considered class of QTL that influence phenotype variance, vQTL.
-The \texttt{R} package \texttt{vqtl} implements this statistical model, a significance testing procedure, and facilitates visualization and interpretation of results.
-Because this package is interoperable with the popular \texttt{R/qtl} package and uses many of the same data structures and input patterns, it will be easy for many geneticists to analyze the results of their experimental crosses with \texttt{vqtl}, possibly discovering new QTL.
-Here, we demonstrate a typical usage case.
+Existing methods for QTL mapping in experimental crosses assume that the amount of residual variation is constant across all individuals.
+Many common situations can violate this assumption.
+For example, female mice may have more variable phenotypes than males, some experimenters may make more precise measurements than others, and specific genetic loci may influence the extent of variation between individuals.
+In all such cases, the heterogeneous variance modeling approach demonstrated here provides higher power, better protection against false positives, and allows for detection of QTL that influence phenotype variance, termed vQTL.
+The \texttt{R} package \texttt{vqtl} makes it easy for geneticists to apply the heterogeneous variance model, control family-wide error rate (FWER), and visualize and interpret their results.
+Because this package is interoperable with the popular \texttt{R/qtl} package and uses many of the same data structures and input patterns, it will be easy for geneticists to analyze the results of their experimental crosses with \texttt{vqtl}, possibly discovering new QTL.
+Here, we demonstrate typical usage.
 \end{abstract}
 
 \begin{document}
@@ -40,41 +43,150 @@ Here, we demonstrate a typical usage case.
 \correspondingauthoraffiliation{Correspondence e-mail: william.valdar@unc.edu}
 \vspace{-11pt}%
 
-\noindent Introductory material, motivation, rationale, etc.  Introductory material, motivation, rationale, etc.  Introductory material, motivation, rationale, etc.  Introduce mQTL, vQTL, and mvQTL nomenclature.
+\noindent Experimental crosses of inbred organisms have been a cornerstone of forward genetics for over a century \citep{mendel1866}.
+They have provided important insights on nearly every trait of interest in human disease, agriculture, and livestock production.
+Studies across all these diverse fields were enabled by advances in methods for efficient breeding, phenotyping \citep{Yang2014a}, genotyping \citep{Williams1990}, statistical methods \citep{Lander1989a}, and software tools \citep{Broman2003}.
 
-\section*{Simulation}
+One assumption that has been constant throughout all these advances is that the extent of residual variation is constant across all organisms in a study population.
+Said another way, it has always been assumed that no environmental factors and no genetic factors influence the extent of residual phenotype variation.
+In the companion piece of this article, we introduced a statistical modeling approach that accommodates heterogeneity in residual variation within a study population.
+We further demonstrated two critical benefits of using this ``simultaneous mean-variance'' modeling approach.
 
-We will illustrate the usage and interpretation of the \texttt{vqtl} package through the analysis of an experimental cross simulated with \texttt{R/qtl}.
-The simulated population consists of 100 male and 100 female F2 offspring, with 5 chromosomes of length 100 cM tagged by 30 equally-spaced markers each.
+\begin{enumerate}
+	\item It allows for the detection of genetic loci that influence residual phenotype variation, which are likely to play central roles in the network of molecular interactions that gives rise to a complex trait.
+	\item It allows for accurate consideration of the quantity of information provided by each individual.  Individuals with less residual phenotype variance provide more information about the mean of the groups to which they belong, as is evident in the standard equation for the standard error of the mean: $\text{SE}_\mu = \sigma/\sqrt{n}$.
+\end{enumerate}
+
+The companion piece of this article is based on our reanalysis of an F2 intercross of two mouse strains carried out and published in 2008, but some of the results are completely novel.
+In support of other researchers who may be interested in reanalysing previously-conducted mapping studies using the simultaneous mean-variance mapping approach, we have composed an R package that provides functions for conducting mean-variance genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
+R package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
+
+Here, we demonstrate typical usage of the \texttt{vqtl} package.
+The code used to generate all statistics and figures in this paper is available at \texttt{github.com/rcorty}.
+
+
+\section*{Simulated Experimental Cross}
+
+We used \texttt{R/qtl} to simulate the experimental cross to be analyzed.
+The simulated population consists of 200 male and 200 female F2 offspring, with 3 chromosomes of length 100 cM, each tagged by 30 equally-spaced markers and genotype probabilities estimated by HMM to 2 cM separation.
 We simulate four phenotypes
 
 \begin{enumerate}
-	\item phenotype1 consists only of random noise
-	\item phenotype2 has one large-effect mQTL at the 15th marker on chromosome one
-	\item phenotype3 has one large-effect vQTL at the 15th marker on chromosome two
-	\item phenotype2 has one large-effect mvQTL at the 15th marker on chromosome three
+	\item \texttt{phenotype1} consists only of random noise and will serve as an example of negative results for all tests
+	\item \texttt{phenotype2} is influenced by the 15th marker on chromosome one.  The marker influences the mean of the phenotype, but not the variance, so it will serve as an example of a pure ``mQTL''.
+	\item \texttt{phenotype3} is influenced by the 15th marker on chromosome two.  The marker influences the variance of the phenotype, but not the mean, so it will serve as an example of a pure ``vQTL''.
+	\item \texttt{phenotype4} is influenced by the 15th marker on chromosome three.  The marker influences both the mean and the variance of the phenotype, so it will serve as an example of a joint ``mvQTL''.
 \end{enumerate}
 
+We additionally consider \texttt{phenotype1'} through \texttt{phenotype4'}, which have the same genetic effects as \texttt{phenotype1} through \texttt{phenotype4}, but additionally have covariate effects on phenotype variance.
+All the same analyses and plots that are shown for \texttt{phenotype1} through \texttt{phenotype4} are shown for \texttt{phenotype1'} through \texttt{phenotype4'} in the supplementary materials.
 
 \section*{Conducting a genome scan}
 
-Analogous to the central \texttt{scanone} function in package \texttt{qtl}, package \texttt{vqtl} provides function \texttt{scanonevar}.
-Like \texttt{scanone}, \texttt{scanonevar} takes as input an object of class \texttt{cross}, and the specification of a a single phenotype contained in the \texttt{cross} and returns as output a statistic for each genetic locus in the \texttt{cross} that summarizes the association between that locus and the phenotype.
-However, \texttt{scanone} only tests for association between each locus and the phenotype mean, while \texttt{scanonevar} tests for associations with mean and variance.
-Thus \texttt{scanonevar} returns not one, but three, statistics for each genetic locus: one that summarizes the association of the locus with phenotype mean, one that summarizes the association of the locus with phenotype variance, and one that jointly summarizes the association between the locus, phenotype mean, and phenotype variance.
+The central function for genetic mapping in package \texttt{qtl} is \texttt{scanone}.
+Analogously, the central function for genetic mapping in package \texttt{vqtl} is \texttt{scanonevar}.
+
+\texttt{scanonevar} takes three required inputs:
+
+\begin{enumerate}
+    \item \texttt{cross} contains the genetic and phenotypic information from an exerimental cross.  This object can be the same \texttt{cross} object used in package \texttt{qtl}.
+    \item \texttt{mean.formula} specifies the phenotype to be mapped, the covariates to be corrected for, and the QTL terms to be fitted (\texttt{additive} and \texttt{dominance} components by default).  The \texttt{mean.formula} uses the standard \texttt{R} formula notation.
+    \item \texttt{var.formula} specifies the covariates to be corrected for as well as the QTL terms to be fitted (\texttt{additive} and \texttt{dominance} components by default) in modeling the residual variance.  The \texttt{var.formula} also uses the standard \texttt{R} formula notation.
+\end{enumerate}
+
+Optional argument \texttt{chrs} is used to specify a subset of chromosomes to be scanned, defaulting to all chromosomes.
+Optional argument \texttt{return.covar.effects} is used to specify whether or not fitted effects of all covariates should be returned as part of the scan result, defaulting to \texttt{FALSE}.
+
+Unlike \texttt{scanone}, which only tests for association between each locus and the phenotype mean, \texttt{scanonevar} computes three tests for each locus -- association with phenotype mean, association with phenotype variance, and joint association with phenotype mean and variance.
+The statistic for each of these associations is a LOD score, the log of the ratio of the likelihood of the alternative model to the null model.
+The details of the null and alternative models used in each of the three tests can be found in the companion article.
+LOD scores are hard to compare across autosomal and sex chromosomes due to the difference in number of parameters.
+The $p$-value of each LOD score is also calculated, based on the asymptotic $\chi^2$ distribution with the appropriate degrees of freedom of each test, but the interpretation of these $p$-values is clouded by the multiplicity of tests that are conducted in each scan.
+Assessing the significance of the LOD scores in a manner that controls family-wide error rate (FWER) to the desired level is decribed below and is the recommened method for assessing the significance of QTL mapping results.
+
+The object returned by the \texttt{scanonevar} function has class \texttt{scanonevar}.
+Calling \texttt{plot} on this object produces a publication-quality plot that shows the three association statistics at each locus.
+Calling \texttt{summary} on this object produces a summary of how the scan was conducted and what the results were.
 
 
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{images/LOD_scans.pdf}
-	\caption{For each of the four simulated phenotypes, we have the three new tests in black, blue, and red.  The traditional test is in green and clearly similar to the blue test in the vast manority of loci. \label{fig:lod_score_scans}}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phen1.pdf}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phen2.pdf}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phen3.pdf}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phen4.pdf}
+    \end{subfigure}
+    
+    \caption{For each of the four simulated phenotypes, we have the three new tests in black, blue, and red.  The traditional test is in green and clearly similar to the blue test in the vast manority of loci. \label{fig:lod_score_scans}}
 \end{figure}
 
-\section{Assessing the Statistical Significance of Findings}
 
-Figure~\ref{fig:lod_score_scans} shows the log of the odds at each locus for each of the four tests as a measure of association.
-This measure is traditional in QTL mapping, but in this scenario where multiple different tests are conducted at each locus, it suggesets a misleading interpretation, that points of different colors with the same LOD score represent an equal quantity of evidence against the null (no genetic effect).
-In fact, as is visible in the top panel of figure~\ref{fig:lod_score_scans}, the LOD score that results from differnet tests is different under the null.
-For example, the LOD score of the DGLM-joint test is always higher than the other three tests because all the other tests are ``nested'' inside the DGLM joint test.
+
+\section*{Assessing the Significance of Results}
+
+The effective number of statistical tests conducted in a family of tests (a genome scan) is typically must be estimated to control family-wide error rate (FWER).
+The effective number of tests in a genome scan, however, is difficult to estimate.
+One lower bound is the number of chromosomes.
+Due to the randomization in meiosis no two non-syntenic loci are correlated in an experimental cross and therefore tests on different chromosomes are always independent.
+But there are many tests conducted on each chromosome, so the number of chromosomes is an under-estimate.
+One upper bound on the effective number of tests is the total number of loci.
+But, loci on the same chromosome are often in linkage disequilibrium and so the total number of loci is an over-estimate.
+
+Our empirical approach avoids the need to estimate the effective number of tests.
+We conduct many genomes scans, each with its own permutation of the genotype probabilities and estimate an extreme value distribution for the genome-wide maximum LOD score of each test.
+This approach is implemented in \texttt{scanonevar.perm}.
+
+\texttt{scanonevar.perm} takes two required inputs:
+
+\begin{enumerate}
+	\item \texttt{sov} is the \texttt{scanonevar} object, the statistical significance of which will be assessed.
+	\item \texttt{n.perms} is the number of permutations to conduct.
+\end{enumerate}
+
+The object returned by \texttt{scanonevar.perm} is a \texttt{scanonevar} object with one important additional piece of information.
+An empirical $p$-value for each test at each locus is included.
+These $p$-values are FWER-corrected, so a value of $0.05$ for a specific test at a specific locus implies that in 5\% of similar experiments where there is no true genotype-phenotype association, we would expect to observe \textit{some} locus this significant or more significant.
+A list of the per-genome-scan maximum observed LOD for each test and each chromosome type.
+
+
+Accurate estimation of the FWER-controlled $p$-values requires many permutation scans.
+We recommend at least 100, and rarely more than 1000.
+These permutation scans can be broken into groups, run on separate computers, and combined with the generic \texttt{c} function.
+
+\begin{figure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phen1.pdf}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phen2.pdf}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phen3.pdf}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phen4.pdf}
+    \end{subfigure}
+    
+    \caption{For each of the four simulated phenotypes, we have the three new tests in black, blue, and red.  The traditional test is in green and clearly similar to the blue test in the vast manority of loci. \label{fig:empir_p_scans}}
+\end{figure}
+
+
+% Figure~\ref{fig:lod_score_scans} shows the log of the odds at each locus for each of the four tests as a measure of association.
+% This measure is traditional in QTL mapping, but in this scenario where multiple different tests are conducted at each locus, it suggesets a misleading interpretation, that points of different colors with the same LOD score represent an equal quantity of evidence against the null (no genetic effect).
+% In fact, as is visible in the top panel of figure~\ref{fig:lod_score_scans}, the LOD score that results from differnet tests is different under the null.
+% For example, the LOD score of the DGLM-joint test is always higher than the other three tests because all the other tests are ``nested'' inside the DGLM joint test.
 % To put the four tests on a level playing field, we must conduct randomized genome scans and assess the observed LOD scores in the context of the per-scan maxima from the randomized genome scans, as illustrated in figure~\ref{fig:FWER}.
 
 
@@ -85,163 +197,11 @@ For example, the LOD score of the DGLM-joint test is always higher than the othe
 
 
 
-\section{Interpreting Significant Results}
+\section*{Investigate Significant Findings}
 
 
 
-% \section*{Guide to using this template in Overleaf}
 
-% This template is provided to help you prepare your article for submission to the \textit{Genetics}.
-
-% \section*{Author Affiliations}
-
-% For the authors' names, indicate different affiliations with the symbols: $\ast$, $\dagger$, $\ddagger$, $\S$. After four authors, the symbols double, triple, quadruple, and so forth as required.
-
-% \section*{Your Abstract}
-
-% In addition to the guidelines provided in the example abstract above, your abstract should:
-
-% \begin{itemize}
-% \item provide a synopsis of the entire article;
-% \item begin with the broad context of the study, followed by specific background for the study;
-% \item describe the purpose, methods and procedures, core findings and results, and conclusions of the study;
-% \item emphasize new or important aspects of the research;
-% \item engage the broad readership of G3 and be understandable to a diverse audience (avoid using jargon);
-% \item be a single paragraph of less than 250 words;
-% \item contain the full name of the organism studied;
-% \item NOT contain citations or abbreviations.
-% \end{itemize}
-
-% \section*{Introduction}
-
-% For the introduction, authors should be mindful of the broad readership of the journal. The introduction should set the stage for the importance of the work to a generalist reader and draw the reader in to the specific study. The scope and impact of the work should be clearly stated.
-
-% In individual organisms where a mutant is being studied, the rationale for the study of that mutant must be clear to a geneticist not studying that particular organism. Similarly, study of particular phenotypes should be justified broadly and not on the basis of interest for that organism alone. General background on the importance of the genetic pathway and/or phenotype should be provided in a single, well-reasoned paragraph near the beginning of the introduction.
-
-% Authors are encouraged to:
-
-% \begin{itemize}
-% \item cite the supporting literature completely rather than select a subset of citations;
-% \item provide important background citations, including relevant review papers (to help orient the non-specialist reader);
-% \item to cite similar work in other organisms.
-% \end{itemize}
-
-% \section*{Materials and Methods}
-
-% Manuscripts submitted to G3 should contain a clear description of the experimental design in sufficient detail so that the experimental analysis could be repeated by another scientist. If the level of detail necessary to explain the protocol goes beyond two paragraphs, give a short description in the main body of the paper and prepare a detailed description for supporting information.  For example, details would include indicating how many individuals were used, and if applicable how individuals or groups were combined for analysis. If working with mutants indicate how many independent mutants were isolated. If working with populations indicate how samples were collected and whether they were random with respect to the target population.
-
-% \subsection*{Statistical Analysis} 
-
-% Indicate which statistical analysis has been performed and describe the method and model applied. If many genes were examined simultaneously, or many phenotypes, a multiple comparison correction should be used to control the type I error rate, or a rationale for not applying a correction must be provided. The type of correction applied should be clearly stated. It should also be clear whether the p-values reported are raw, or after correction. Corrected p-values are often appropriate, but raw p-values should be available in the supporting materials so that others may perform their own corrections. 
-
-% \subsection*{Data Availability}
-
-% At the end of the Materials and Methods section, include a statement on reagent and data availability. Please read the Data and Reagent Policy before writing the statement. Make sure to list the accession numbers or DOIs of any data you have placed in public repositories. List the file names and descriptions of any data you will upload as supplemental information. The statement should also include any applicable IRB numbers. You may include specifications for how to properly acknowledge or cite the data.
-
-% For example: Strains are available upon request. File S1 contains detailed descriptions of all supplemental files. File S2 contains SNP ID numbers and locations. File S3 contains genotypes for each individual. Sequence data are available at GenBank and the accession numbers are listed in File S3. Gene expression data are available at GEO with the accession number: GDS1234. Code used to generate the simulated data is provided in file S4. 
-
-% \section*{Results and Discussion}
-
-% The results and discussion should not be repetitive. The results section should give a factual presentation of the data and all tables and figures should be referenced; the discussion should not summarize the results but provide an interpretation of the results, and should clearly delineate between the findings of the particular study and the possible impact of those findings in a larger context. Authors are encouraged to cite recent work relevant to their interpretations. Present and discuss results only once, not in both the Results and Discussion sections. It is sometimes acceptable to combine results and discussion. The text should be as succinct as possible. Heed Strunk and White's dictum: "Omit needless words!"
-
-% \section*{Additional guidelines}
-
-% \subsection*{Numbers} In the text, write out numbers nine or less except as part of a date, a fraction or decimal, a percentage, or a unit of measurement. Use Arabic numbers for those larger than nine, except as the first word of a sentence; however, try to avoid starting a sentence with such a number.
-
-% \subsection*{Units} Use abbreviations of the customary units of measurement only when they are preceded by a number: "3 min" but "several minutes". Write "percent" as one word, except when used with a number: "several percent" but "75\%." To indicate temperature in centigrade, use ° (for example, 37°); include a letter after the degree symbol only when some other scale is intended (for example, 45°K).
-
-% \subsection*{Nomenclature and Italicization} Italicize names of organisms even when  when the species is not indicated.  Italicize the first three letters of the names of restriction enzyme cleavage sites, as in HindIII. Write the names of strains in roman except when incorporating specific genotypic designations. Italicize genotype names and symbols, including all components of alleles, but not when the name of a gene is the same as the name of an enzyme. Do not use "+" to indicate wild type. Carefully distinguish between genotype (italicized) and phenotype (not italicized) in both the writing and the symbolism.
-
-% \section*{In-text Citations}
-
-% Add citations using the \verb|\citep{}| command, for example \citep{neher2013genealogies} or for multiple citations, \citep{neher2013genealogies, rodelsperger2014characterization}.
-
-% For examples of different references, please see the example bibliography file (accessible via the Project menu in the Overleaf editor). This contains examples of articles \citep{neher2013genealogies, rodelsperger2014characterization}, a book \citep{Sturtevent2001}, a book chapter \citep{Sturtevent2001chp7}, ahead-of-print work \citep{Starita2015} and software \citep{Kruijer2015}.
-
-% \section*{Examples of Article Components}
-% \label{sec:examples}
-
-% The sections below show examples of different header levels, which you can use in the primary sections of the manuscript (Results, Discussion, etc.) to organize your content.
-
-% \section*{First level section header}
-
-% Use this level to group two or more closely related headings in a long article.
-
-% \subsection*{Second level section header}
-
-% Second level section text.
-
-% \subsubsection*{Third level section header:}
-
-% Third level section text. These headings may be numbered, but only when the numbers must be cited in the text. 
-
-% \section*{Figures and Tables}
-
-% Figures and Tables should be labelled and referenced in the standard way using the \verb|\label{}| and \verb|\ref{}| commands.
-
-% \subsection*{Sample Figure}
-
-% Figure \ref{fig:spectrum} shows an example figure.
-
-% \begin{figure}[htbp]
-% \renewcommand{\familydefault}{\sfdefault}\normalfont
-% \centering
-% \includegraphics[width=\linewidth]{example-figure-g3}
-% \caption{Example figure from \url{http://dx.doi.org/10.1534/g3.115.017509}. Please include your figures in the manuscript for the review process. You can upload figures to Overleaf via the Project menu. Upon acceptance, we'll ask for your figure files to be uploaded in any of the following formats: TIFF (.tiff), JPEG (.jpg), Microsoft PowerPoint (.ppt), EPS (.eps), or Adobe Illustrator (.ai).  Images should be a minimum of 300 dpi in resolution and 500 dpi minimum if line art images.  RGB, CMYK, and Grayscale are all acceptable. Halftones should be high contrast with sharp detail, because some loss of detail and contrast is inevitable in the production process. Figures should be 10-20 cm in width and 1-25 cm in height. Graph axes must be exactly perpendicular and all lines of equal density.
-% Label multiple figure parts with A, B, etc. in bolded type, and use Arrows and numbers to draw attention to areas you want to highlight. Legends should start with a brief title and should be a self-contained description of the content of the figure that provides enough detail to fully understand the data presented. All conventional symbols used to indicate figure data points are available for typesetting; unconventional symbols should not be used. Italicize all mathematical variables (both in the figure legend and figure) , genotypes, and additional symbols that are normally italicized.  
-% }%
-% \label{fig:spectrum}
-% \end{figure}
-
-% \subsection*{Sample Video}
-
-% Figure \ref{video:spectrum} shows how to include a video in your manuscript.
-
-% \begin{figure}[htbp]
-% \renewcommand{\familydefault}{\sfdefault}\normalfont
-% \centering
-% \includegraphics[width=\linewidth]{example-figure-g3}
-% \caption{Example movie (the figure file above is used as a placeholder for this example). G3 supports video and movie files that can be linked from any portion of the article - including the abstract. Acceptable formats include .asf, avi, .wav, and all types of Windows Media files.   
-% }%
-% \label{video:spectrum}
-% \end{figure}
-
-
-% \subsection*{Sample Table}
-
-% Table \ref{tab:shape-functions} shows an example table. Avoid shading, color type, line drawings, graphics, or other illustrations within tables. Use tables for data only; present drawings, graphics, and illustrations as separate figures. Histograms should not be used to present data that can be captured easily in text or small tables, as they take up much more space.  
-
-% Tables numbers are given in Arabic numerals. Tables should not be numbered 1A, 1B, etc., but if necessary, interior parts of the table can be labeled A, B, etc. for easy reference in the text.  
-
-
-% \begin{table*}[htbp]
-% \renewcommand{\familydefault}{\sfdefault}\normalfont
-% \centering
-% \caption{\bf Students and their grades}
-% \begin{tableminipage}{\textwidth}
-% \begin{tabularx}{\textwidth}{XXXX}
-% \hline
-% \header Student & Grade\footnote{This is an example of a footnote in a table. Lowercase, superscript italic letters (a, b, c, etc.) are used by default. You can also use *, **, and *** to indicate conventional levels of statistical significance, explained below the table.} & Rank & Notes \\
-% \hline
-% Alice & 82\% & 1 & Performed very well.\\
-% Bob & 65\% & 3 & Not up to his usual standard.\\
-% Charlie & 73\% & 2 & A good attempt.\\
-% \hline
-% \end{tabularx}
-%   \label{tab:shape-functions}
-% \end{tableminipage}
-% \end{table*}
-
-% \section*{Sample Equation}
-
-% Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-% \begin{equation}
-% S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-%       = \frac{1}{n}\sum_{i}^{n} X_i
-% \label{eq:refname1}
-% \end{equation}
-% denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
-
-% \bibliography{example-bibliography}
+\bibliography{10_Aim1-2016_G3_PackageVQTL}
 
 \end{document}
