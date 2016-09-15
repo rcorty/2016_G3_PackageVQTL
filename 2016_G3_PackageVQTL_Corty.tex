@@ -47,22 +47,23 @@ Here, we demonstrate typical usage.
 They have provided important insights on nearly every trait of interest in human disease, agriculture, and livestock production.
 Studies across all these diverse fields were enabled by advances in methods for efficient breeding, phenotyping \citep{Yang2014a}, genotyping \citep{Williams1990}, statistical methods \citep{Lander1989a}, and software tools \citep{Broman2003}.
 
-One assumption that has been constant throughout all these advances is that the extent of residual variation is constant across all organisms in a study population.
-Said another way, it has always been assumed that no environmental factors and no genetic factors influence the extent of residual phenotype variation.
+One common assumption throughout is that the extent of residual variation is constant across all organisms in a study population.
+Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the extent of residual phenotype variation.
 In the companion piece of this article, we introduced a statistical modeling approach that accommodates heterogeneity in residual variation within a study population.
 We further demonstrated two critical benefits of using this ``simultaneous mean-variance'' modeling approach.
 
 \begin{enumerate}
-	\item It allows for the detection of genetic loci that influence residual phenotype variation, which are likely to play central roles in the network of molecular interactions that gives rise to a complex trait.
-	\item It allows for accurate consideration of the quantity of information provided by each individual.  Individuals with less residual phenotype variance provide more information about the mean of the groups to which they belong, as is evident in the standard equation for the standard error of the mean: $\text{SE}_\mu = \sigma/\sqrt{n}$.
+	\item It allows for the detection of genetic loci that influence the extent of residual variation, which are likely to play central roles in the network of molecular interactions that gives rise to a complex trait.
+	\item It allows for accurate consideration of the quantity of information provided by each individual.  Individuals with less residual variation provide more information about the mean of the groups to which they belong, as is evident in the formula for the standard error of the mean of a normally-distributed random variable: $\text{SE}_\mu = \sigma/\sqrt{n}$.
 \end{enumerate}
 
-The companion piece of this article is based on our reanalysis of an F2 intercross of two mouse strains carried out and published in 2008, but some of the results are completely novel.
-In support of other researchers who may be interested in reanalysing previously-conducted mapping studies using the simultaneous mean-variance mapping approach, we have composed an R package that provides functions for conducting mean-variance genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
-R package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
+Using the ``simultaneous mean-variance'' approach, we reanalyzed an F2 intercross of two inbred mouse strains that was carried out and published in 2008.
+This reanalysis uncovered some novel results.
+In support of other researchers who may be interested in reanalysing previously-conducted mapping studies using the simultaneous mean-variance approach, we have composed \texttt{R} package \texttt{vqtl}, which provides functions for conducting mean-variance genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
+\texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
 
-Here, we demonstrate typical usage of the \texttt{vqtl} package.
-The code used to generate all statistics and figures in this paper is available at \texttt{github.com/rcorty}.
+Here, we demonstrate typical use of the \texttt{vqtl} package.
+The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
 
 
 
@@ -86,7 +87,7 @@ All the same analyses and plots that are shown for \texttt{phenotype1} through \
 
 
 
-\section*{Conduct a Genome Scans}
+\section*{Conduct Genome Scans}
 
 The central function for genetic mapping in package \texttt{qtl} is \texttt{scanone}.
 Analogously, the central function for genetic mapping in package \texttt{vqtl} is \texttt{scanonevar}.
@@ -107,7 +108,7 @@ The statistic for each of these associations is a LOD score, the log of the rati
 The results of \texttt{scanonevar} on each of the four described phenotypes is shown in figure~\ref{fig:lod_score_scans}.
 The details of the null and alternative models used in each of the three tests can be found in the companion article.
 
-\begin{figure}[ht!]
+\begin{figure}
     \begin{subfigure}{0.5\textwidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype1.pdf}
     \end{subfigure}
@@ -129,23 +130,31 @@ The details of the null and alternative models used in each of the three tests c
 
 
 The LOD score is the traditional test statistic in QTL mapping, but its interpretation can be difficult for two reasons:
-1) LOD scores must be interpreted differently in autosomes and sex chromosomes.  The sex chromosomes are typically fit with fewer parameters, so the LOD scores are typically lower.
-2) LOD scores from different tests must be interpreted differently.  For example, the LOD score of the mvQTL test is always higher than the LOD score of the mQTL and vQTL tests, because they are nested tests.
+(1) LOD scores must be interpreted differently in autosomes and sex chromosomes.
+The sex chromosomes are typically fit with fewer parameters, depressing the expected value of the LOD scores under the null, and thus increasing the significance of any observed LOD score.
+(2) LOD scores from different tests must be interpreted differently.
+For example, the LOD score of the mvQTL test is always higher than the LOD score of the mQTL and vQTL tests.
+This relationship is due to the nested nature of the mvQTL test and the other two tests.
+All three tests use the same alternative model, but the null model in the mvQTL test imposes all the constraints of the null of the mQTL test and all the constraints of the null of the vQTL test, so the LOD score of the mvQTL test must, by definition, be greater than the LOD score of the other tests.
 
-These difficulties in interpreting the LOD score are borne out in figure~\ref{fig:lod_score_scans}.
-Given the scale of the vertical axis, it seems that there are no important signicals in the genome scan of \texttt{phenotype1}.
-It is visually clear that the most interesting signals for \texttt{phenotype2}, \texttt{phenotype3}, and \texttt{phenotype4} are on chromosomes one two and three, respectively.
-But it is not evident how to compare the results of the mvQTL test to the results of the other tests.
-Nor would it be clear how to compare the results of tests from sex chromosomes, if they were present, to those from autosomes.
-Nor is is possible to make an appropriate multple testing correction to account for the many tests that are conducted in a genome scan.
+These difficulties in interpreting the LOD score evident in figure~\ref{fig:lod_score_scans}.
+It seems that there are no important signials in the genome scan of \texttt{phenotype1} and it is visually clear that the most interesting signals for \texttt{phenotype2}, \texttt{phenotype3}, and \texttt{phenotype4} are on chromosomes one two and three, respectively.
+But important questions remain:
+(1) If we didn't have the genome scans from \texttt{phenotype2} - \texttt{phenotype4} available for comparison, would we be confident there are no statistically significant signals related to \texttt{phenotype1}?
+(2) How can we compare the results of the mvQTL test to the results of the other tests?
+(3) How could we compare the results of tests on autosomes to tests on sex chromosomes (if they were present)?
+(4) How often do we expect to observe results of this magnitude or greater when there is no true association, due simply to sampling variation and the multiplicity of tests conducted?
 
 To put all genetic loci and all three tests on a level playing field, we consider two types of $p$-values:
-1) Asymptotic $p$-values are calculated by \texttt{scanonevar} using the $\chi^2$ distribution with the appropriate degrees of freedom.  Though these $p$-values overcome the two problems of working with LOD scores described above, they leave unresolved the problem of interpreting $p$-values when many tests were conducted.
-2) Empirical, family-wide error rate (FWER) -corrected $p$-values resolve the multiple-testing issue, thus they are the recommended means of assessing the significance of QTL mapping results.  Methods for calculating them are described in the next section.
+(1) Asymptotic $p$-values are calculated by \texttt{scanonevar} using the $\chi^2$ distribution with the appropriate degrees of freedom for each locus.
+Though these $p$-values overcome the questions 1 through 3 of working with LOD scores described above, they leave problem 4 unresolved.
+(2) Empirical, family-wide error rate (FWER) -corrected $p$-values resolve all the above issues with interpreting LOD scores, thus they are the recommended means of assessing the significance of QTL mapping results.
+Methods for calculating them are described in the next section.
 
 The object returned by the \texttt{scanonevar} function has class \texttt{scanonevar}.
 Calling \texttt{plot} on this object produces a publication-quality plot that shows the three association statistics at each locus.
 Calling \texttt{summary} on this object produces a summary of how the scan was conducted and what the results were.
+With this example dataset, it takes five seconds to run one genome scan on a Intel Core i5.
 
 
 
@@ -153,21 +162,25 @@ Calling \texttt{summary} on this object produces a summary of how the scan was c
 
 \section*{Assess the Significance of Results}
 
+The $p$-value assigned to each locus by calculating the position of its calculated LOD score in its null distribution answers the question, ``How probable is it to observe this much or more evidence against the null at this locus, given that there is no true effect?''
+This question is not entirely relevant for genetic mapping, however, because we typically test for association at many loci, with no special interest in any individual locus \textit{a priori}.
+Thus, a more appropriate $p$-value would answer the question, ``How probable is it to observe this much or more evidence against the null at some locus in the genome, given that there are no true effects?''
+This is precisely the reasing behind the family-wide-error-rate (FWER) controlling procedure we illustrate below.
 
-The effective number of statistical tests conducted in a family of tests (a genome scan) typically must be estimated to control family-wide error rate (FWER).
+To calculate a FWER-controlling $p$-value, one typically must estimate the effective number of statistical tests conducted.
 The effective number of tests in a genome scan, however, is difficult to estimate.
 One lower bound is the number of chromosomes.
 Due to the randomization in meiosis no two non-syntenic loci are correlated in an experimental cross and therefore tests on different chromosomes are always independent.
-But there are many tests conducted on each chromosome, so the number of chromosomes is an under-estimate.
+But there are many non-identical tests conducted on each chromosome, so the number of chromosomes is an under-estimate.
 One upper bound on the effective number of tests is the total number of loci.
 But, loci on the same chromosome are often in linkage disequilibrium, therefore the tests are not independent and the total number of loci is an over-estimate.
 
 Our empirical approach sidesteps estimation of the effective number of tests.
-We conduct many genomes scans, each executing a carefully-constructed model comparison to maintain all mean and variance effects of covariates and any non-focal genetic effects on mean and variance.
+We conduct many permuted genomes scans, each executing a carefully-constructed model comparison to maintain all mean and variance effects of covariates and any non-focal genetic effects on mean and variance.
 The details of these model comparisons are provided in the companion article.
 For each test, we extract the highest observed value of the test statistic from each permutation scan and use those to model a generalized extreme value distribution.
 The observed LOD scores from the genome scan are then transformed by the cumulative distribution function of the extreme value distribution to estimate the FWER-controlling $p$-values.
-This approach is implemented in \texttt{scanonevar.perm}.
+This approach is implemented in the function, \texttt{scanonevar.perm}.
 \texttt{scanonevar.perm} takes two required inputs:
 
 \begin{enumerate}
@@ -176,11 +189,11 @@ This approach is implemented in \texttt{scanonevar.perm}.
 \end{enumerate}
 
 The object returned by \texttt{scanonevar.perm} is a \texttt{scanonevar} object with one important additional piece of information, an empirical $p$-value for each test at each locus.
-These $p$-values are FWER-corrected, so a value of $0.05$ for a specific test at a specific locus implies that in 5\% of similar experiments where there is no true genotype-phenotype association, we would expect to observe \textit{some} locus this significant or more significant.
-A list of the per-genome-scan maximum observed LOD for each test and each chromosome type.
+These $p$-values are FWER-corrected, so a value of $0.05$ for a specific test at a specific locus implies that in 5\% of similar experiments where there is no true genotype-phenotype association, we would expect to observe \textit{some} locus with this much or more evidence of association.
+Additionally, the returned object contains a list of the per-genome-scan maximum observed LOD for each test and each chromosome type.
 
 
-\begin{figure}[ht!]
+\begin{figure}
     \begin{subfigure}{0.5\textwidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype1.pdf}
     \end{subfigure}
@@ -206,7 +219,7 @@ We recommend at least 100, and rarely more than 1000.
 These permutation scans can be run on multiple processors by specifying the optional \texttt{n.cores} argument.
 On an Intel Core i5, running 100 permutations takes about five minutes.
 When many phenotypes are studied, or the 5-50 minute runtime is problematic, these permutation scans can be broken into groups with different values for \texttt{random.seed}, run on separate computers, and combined with the \texttt{c} function.
-This function combines the permutations from all the inputted scans, re-evaluates the observed LOD scores in light of all available permutations, and returns a new \texttt{scanonevar} object with more precisely estimated empirical $p$-values in about one second.
+This function combines the permutations from all the inputted scans, re-evaluates the observed LOD scores in the context of all available permutations, and returns a new \texttt{scanonevar} object with more precisely estimated empirical $p$-values.
 
 
 
@@ -215,7 +228,7 @@ This function combines the permutations from all the inputted scans, re-evaluate
 
 \section*{Investigate Significant Findings}
 
-\begin{figure}[htbp]
+\begin{figure}
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen1.pdf}
     \end{subfigure}
@@ -239,30 +252,34 @@ Having identified some QTL, we want to visualize the allele effects at those loc
 Because the \texttt{vqtl} package models both mean and variance effects, existing plotting utilities aren't able to display the entirety of the modeling results.
 To investigate the results of a \texttt{vqtl} scan at one particular locus, we developed the \texttt{mean\_var\_plot}.
 This plot shows information about the phenotype mean on the horizontal axis and information about the phenotype variance on the vertical axis.
-There are both ``model-free'' and ``model-based'' versions of this plotting utility, but here we show only the ``model-based'' version for conciseness.
+There are both ``model-free'' and ``model-based'' versions of this plotting utility, but here we show only the ``model-based'' version here.
 
 Figure~\ref{fig:mean_var_plots} shows a model-based \texttt{mean\_var\_plot} for each of the four phenotypes.
-In each plot, the location of the dot shows the estimated mean and variance effect of each genotype, with the mean effect indicated by the horizontal position and the variance effect indicated by the vertical position.
-The horizontal lines extending to the left and right from each dot show the standard error of the mean estimate, and the vertical lines extending up and down from each dot show the standard error of the variance estimate.
-Additional grouping factors, such as sex, treatment group, or batch can also be specified and all combinations of effects for which an observation was made are plotted, but we here we show only the allele effects for clarity.
+In each plot, the location of the dot shows the estimated mean and standard deviation of each genotype group, with the mean indicated by the horizontal position and the standard deviation indicated by the vertical position.
+The horizontal lines extending to the left and right from each dot show the standard error of the mean estimate, and the vertical lines extending up and down from each dot show the standard error of the standard deviation estimate.
+There are two types of grouping factors considered by the function \texttt{mean\_var\_plot\_model\_based}:
+(1) \texttt{focal.groups} are groups that are modeled and the prediction for each group is plotted.
+For example, a genetic marker is the \texttt{focal.group} in each plot in figure~\ref{fig:mean_var_plots}; \texttt{D1M1} in the top left, \texttt{D1M6} in the top right, etc.
+(2) \texttt{nuisance.groups} are groups that are modeled, but then averaged over before plotting.
+When there are many grouping factors thought to play a role in determining the mean and variance of an individual's phenotype, such as sex, treatment, and batch, we recommend putting just one or two in \texttt{focal.groups} and the others in \texttt{nuisance.groups} for clarity, cycling through which are displayed to gain a thorough understanding of the factors that determine the mean and variance of the phenotype.
 
-For phenotype1, the \texttt{mean\_var\_plot} is shown at the first marker of the first chromosome.
+For \texttt{phenotype1}, the \texttt{mean\_var\_plot} is shown at the first marker of the first chromosome.
 The estimates of the genotype effects on phenotype mean and variance are within one standard error of each other.
 This pattern is consistent with the fact that there are no genetic effects, and the $p$-value was not statistically significant at any locus.
 
-For phenotype2, the \texttt{mean\_var\_plot} is shown at the most significant marker, the tenth marker on the first chromosome.
+For \texttt{phenotype2}, the \texttt{mean\_var\_plot} is shown at the most significant marker, the sixth marker on the first chromosome.
 The estimates of the genotype effects differ in the horizontal axis, but not the vertical axis.
 This pattern is consistent with the fact that there is a genetic effect on phenotype mean but none on phenotype variance and with the highly significant $p$-value for the mQTL test, but non-significant $p$-value for the vQTL test.
 
-For phenotype3, the \texttt{mean\_var\_plot} is shown at the most significant marker, the tenth marker on the second chromosome.
+For \texttt{phenotype3}, the \texttt{mean\_var\_plot} is shown at the most significant marker, the sixth marker on the second chromosome.
 The estimates of the genotype effects differ in the vertical axis, but on on the horizontal axis.
 This pattern is consistent with the fact that there is a genetic effect on phenotype variance but none on phenotype mean and with the highly significant $p$-value for the vQTL test but non-significant $p$-value for the mQTL test.
 
-For phenotype4, the \texttt{mean\_var\_plot} is shown at the most significant marker, the tenth marker on the third chromosome.
-The estimates fo the genotype effects differ in both the horizontal and vertical axes.
+For \texttt{phenotype4}, the \texttt{mean\_var\_plot} is shown at the most significant marker, the sixth marker on the third chromosome.
+The estimates fo the genotype effects differ somewhat in both the horizontal and vertical axes, but not as much on the horizontal axis as \texttt{phenotype2} and not as much on the vertical axis as \texttt{phenotype3}.
 This pattern is consistent with the fact that there is a genetic effect on both phenotype mean and variance and with the highly significant $p$-value for the mvQTL test and the marginally significant $p$-values for the other two tests.
 
-
+Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} and \texttt{mean\_var\_plot\_model\_free} are described in the online vignette for the \texttt{vqtl} package, available at \texttt{github.com/rcorty}.
 
 
 
@@ -282,6 +299,8 @@ A suite of plotting functions, e.g. the \texttt{mean\_var\_plot}, allows genetic
 
 
 \bibliography{10_Aim1-2016_G3_PackageVQTL}
+\vfill
+
 
 \newpage
 \section*{Appendix}

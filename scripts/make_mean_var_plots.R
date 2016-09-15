@@ -4,25 +4,25 @@ ylims <- c(0.6, 1.5)
 
 plot(p1 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype1',
-																		 focal.covariate.names = 'D1M1',
+																		 focal.groups = 'D1M1',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
 plot(p2 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype2',
-																		 focal.covariate.names = 'D1M6',
+																		 focal.groups = 'D1M6',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
 plot(p3 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype3',
-																		 focal.covariate.names = 'D2M6',
+																		 focal.groups = 'D2M6',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
 plot(p4 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype4',
-																		 focal.covariate.names = 'D3M6',
+																		 focal.groups = 'D3M6',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
@@ -39,25 +39,25 @@ ylims <- c(0.6, 1.6)
 
 plot(p1 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype1x',
-																		 focal.covariate.names = 'D1M1',
+																		 focal.groups = 'D1M1',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
 plot(p2 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype2x',
-																		 focal.covariate.names = 'D1M6',
+																		 focal.groups = 'D1M6',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
 plot(p3 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype3x',
-																		 focal.covariate.names = 'D2M6',
+																		 focal.groups = 'D2M6',
 																		 xlim = xlims,
 																		 ylim = ylims))
 
 plot(p4 <- mean_var_plot_model_based(cross = my.cross,
 																		 phenotype.name = 'phenotype4',
-																		 focal.covariate.names = 'D3M6',
+																		 focal.groups = 'D3M6',
 																		 xlim = xlims,
 																		 ylim = ylims))
 

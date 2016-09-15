@@ -1,5 +1,6 @@
 # Latex files
 
+*latexmk
 *.aux
 *.glo
 *.idx
