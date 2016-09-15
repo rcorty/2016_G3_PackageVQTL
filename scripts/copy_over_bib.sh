@@ -1,1 +1,0 @@
-cp ~/Dropbox\ \(ValdarLab\)/bibtex/10_Aim1-2016_G3_PackageVQTL.bib .
