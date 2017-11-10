@@ -46,7 +46,7 @@ Most existing methods for QTL mapping in experimental crosses assume that the re
 But common situations violate this assumption.
 For many phenotypes, one sex is more variable than the other, some experimenters make more precise measurements than others, and specific genetic factors influence environmental sensitivity.
 In these cases, mean-variance QTL mapping provides higher power and better protection against false positives.
-It also allows for detection of QTL that influence phenotype variance, termed vQTL.
+It also allows for detection of QTL that influence phenotype variance, termed vQTL and QTL that influence some mixture of phenotype mean and variance, termed mvQTL.
 
 We present \texttt{R} package \texttt{vqtl}.
 This package makes it easy for geneticists to apply the mean-variance QTL mapping approach, control family-wide error rate (FWER), and visualize and interpret their results.
@@ -55,7 +55,7 @@ Because this package is interoperable with the popular \texttt{R/qtl} package an
 
 
 
-\section{Introduction}
+\section*{Introduction}
 
 QTL mapping studies have provided important insights on nearly every trait of interest in human health and disease.
 Advances in breeding, phenotyping \citep{Yang2014a}, and genotyping \citep{Williams1990} model organisms as well as statistical methods \citep{Lander1989a} and software tools \citep{Broman2003} have supported these discoveries.
@@ -66,17 +66,16 @@ Said another way, it is typically assumed that nothing -- neither environmental 
 % In fact, gene-gene interactions, gene-environment interactions, genetic factors that influence microenvironmental sensitivity, and environmental factors can influence residual variance.
 
 
-``vQTL'' analysis challenges that assumption by seeking to identify genetic factors that influence the extent of residual variation \citep{Ronnegard2011a,Ronnegard2012}.
-In the companion piece [Corty2017a], we describe an elaboration of ``vQTL'' analysis, the mean-variance QTL mapping approach.
-This approach allows for QTL mapping in the presence of both genetic and non-genetic effects on phenotype mean and variance.
-We compare its behavior to other QTL mapping approaches, and illustrate the discovery of a new QTL from an existing study.
+``vQTL'' analysis challenges that assumption by seeking to identify genetic factors that influence the extent of residual variation \citep{Ronnegard2011a,Ronnegard2012,Cao2014}.
+In the companion pieces, we describe an elaboration of ``vQTL'' analysis, the mean-variance QTL mapping approach and use it to discover new QTL from existing data resources [companion B, C].
+% This approach allows for QTL mapping in the presence of both genetic and non-genetic effects on phenotype mean and variance.
+% We compare its behavior to other QTL mapping approaches, and illustrate the discovery of a new QTL from an existing study.
 
 In support of other researchers who may be interested in mvQTL mapping, we created \texttt{R} package \texttt{vqtl}, which provides functions for conducting genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
 \texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
 
 Here, we demonstrate typical use of the \texttt{vqtl} package.
 The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
-
 
 
 
@@ -130,10 +129,10 @@ It takes three required inputs:
 
 Optional argument \texttt{chrs} is used to specify a subset of chromosomes to be scanned, defaulting to all chromosomes.
 Optional argument \texttt{return.covar.effects} is used to specify whether or not fitted effects of all covariates should be returned as part of the scan result, defaulting to \texttt{FALSE}.
-
+This option can be useful in assessing the trends in the various genetic components of the phenotype across the genome or in assessing the trends in covariate effects across the genome.
 
 Unlike \texttt{scanone}, which only tests for association between each locus and the phenotype mean, \texttt{scanonevar} computes three tests for each locus -- association with phenotype mean, association with phenotype variance, and joint association with phenotype mean and variance.
-The statistic for each of these associations is a LOD score, the log of the ratio of the likelihood of the alternative model to the null model.
+The statistic for each of these associations is a LOD score, a the log of the ratio of the likelihood of the alternative model to the null model.
 The results of \texttt{scanonevar} on each of the four described phenotypes is shown in figure~\ref{fig:lod_score_scans}.
 The details of the null and alternative models used in each of the three tests can be found in the companion article [Corty2017a, Corty2017b].
 
@@ -220,16 +219,12 @@ The object returned by \texttt{scanonevar.perm} is a \texttt{scanonevar} object 
 These $p$-values are FWER-corrected, so a value of $0.05$ for a specific test at a specific locus implies that in 5\% of similar experiments where there is no true genotype-phenotype association, we would expect to observe \textit{some} locus with this much or more evidence of association.
 Additionally, the returned object contains a list of the per-genome-scan maximum observed LOD for each test and each chromosome type.
 
-
-
 Accurate estimation of the FWER-controlled $p$-values requires many permutation scans.
 We recommend at least 100, and rarely more than 1000 \citep{Churchill1994,Carlborg2002}.
-These permutation scans can be run on multiple processors by specifying the optional \texttt{n.cores} argument.
+These permutation scans can be run on multiple processors by specifying the optional \texttt{n.cores} argument, which defaults to the total number of cores on the computer minus 2.
 On an Intel Core i5, running 100 permutations on this dataset packtakes about five minutes.
 When many phenotypes are studied, or if faster runtimes are needed, these permutation scans can be broken into groups with different values for \texttt{random.seed}, run on separate computers, and combined with the \texttt{c} function.
 This function combines the permutations from all the inputted scans, re-evaluates the observed LOD scores in the context of all available permutations, and returns a new \texttt{scanonevar} object with more precisely estimated empirical $p$-values.
-
-
 
 
 
@@ -256,7 +251,7 @@ This function combines the permutations from all the inputted scans, re-evaluate
     \caption{\texttt{mean\_var\_plot}s show the estimated genotype effects at a locus, with mean effects on the horizontal axis and variance effects on the vertical axis.  Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.  More information on the interpretation of these plots is provided in the `Investigate Significant Findings' section. \label{fig:mean_var_plots}}
 \end{figure}
 
-Having identified some QTL, we want to visualize the allele effects at those loci.
+Having identified some QTL, we want to visualize the estimated genetic and covariate effects at the QTL.
 Because the \texttt{vqtl} package models both mean and variance effects, existing plotting utilities aren't able to display the entirety of the modeling results.
 To investigate the results of a \texttt{vqtl} scan at one particular locus, we developed the \texttt{mean\_var\_plot}.
 This plot shows information about the phenotype mean on the horizontal axis and information about the phenotype variance on the vertical axis.
@@ -290,6 +285,15 @@ This pattern is consistent with the fact that there is a genetic effect on both 
 
 Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} and \texttt{mean\_var\_plot\_model\_free} are described in the online vignette for the \texttt{vqtl} package, available at \texttt{github.com/rcorty}.
 
+
+Finally, it is important to assess the genetic precision of a discovered QTL.
+This step allows for bioinformatic follow-up.
+The function \texttt{scanonevar.boot} implements the non-parametric and Bayesian bootstrap.
+This function takes, as arguments, a \texttt{scanonevar} object, the name of the chromosome containing the QTL, and \texttt{num.resamples}, the number of bootstrap resamplings desired.
+
+In our experience, 1000 resamples is an appropriate number to establish 80\% and 90\% confidence intervals.
+With the datasets simulated here, it takes 15 minutes to run 500 bootstrap resamples on an Intel core i5.
+
 % \section*{Mathematical Details}
 
 % [todo]
@@ -301,15 +305,18 @@ Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} 
 
 \section*{Conclusion}
 
-We have demonstrated typical usage of the new \texttt{vqtl} \texttt{R} package for QTL mapping in experimental crosses.
+We have demonstrated typical usage of the \texttt{vqtl} \texttt{R} package for QTL mapping in experimental crosses.
 This package is most appropriate for crosses and phenotypes where nuisance covariates or genetic factors are known or suspected to influence phenotype variance.
 In the case of genetic factors, they can be mapped.
 In the case of nuisance covariates, they can be accommodated.
 
 The central function of this package, \texttt{scanonevar}, carries out the initial genome scan.
-The permutation function, \texttt{scanonevar.perm}, executes a carefully-constructed set of permutations to empirically estimate a FWER-controlling $p$-value for each observed LOD score.
+The permutation function, \texttt{scanonevar.perm}, executes a set of permutations to empirically estimate a FWER-controlling $p$-value for each observed LOD score.
 A suite of plotting functions, e.g. the \texttt{mean\_var\_plot}, allows geneticists to evaluate the allelic and covariate effects that underlie detected signals.
+The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling to assess the genetic precision of a QTL and extablish a confidence interval. 
 
+
+\printbibliography
 
 
 \clearpage
