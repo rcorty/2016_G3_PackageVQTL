@@ -42,15 +42,19 @@
 
 
 \begin{abstract}
-Most existing methods for QTL mapping in experimental crosses assume that the residual variance is constant across all individuals.
-But common situations violate this assumption.
-For many phenotypes, one sex is more variable than the other, some experimenters make more precise measurements than others, and specific genetic factors influence environmental sensitivity.
-In these cases, mean-variance QTL mapping provides higher power and better protection against false positives.
-It also allows for detection of QTL that influence phenotype variance, termed vQTL and QTL that influence some mixture of phenotype mean and variance, termed mvQTL.
-
-We present \texttt{R} package \texttt{vqtl}.
-This package makes it easy for geneticists to apply the mean-variance QTL mapping approach, control family-wide error rate (FWER), and visualize and interpret their results.
+QTL mapping in experimental crosses is an important component of forward genetics.
+In a companion article, we describe the mean-variance approach to QTL mapping, which addresses both mean and variance heterogeneity.
+Here, we present \texttt{vqtl}, an \texttt{R} package that implements mean-variance QTL mapping.
+The goal of \texttt{vqtl} is to provide a straightforward tool for geneticists to perform mean-variance genome scans, assess the statistical significance of their findings, and communicate their results with informative plots.
 Because this package is interoperable with the popular \texttt{R/qtl} package and uses many of the same data structures and input patterns, it will be easy for geneticists to analyze future experiments with \texttt{R/vqtl} as well as re-analyze past experiments, possibly discovering new QTL.
+% % Mean-variance QTL mapping, a relatively novel approach to QTL mapping, elevates phenotype variance to the same level of consideration as phenotype mean.
+% Most existing methods for QTL mapping in experimental crosses assume that the residual variance is constant across all individuals.
+% But common situations violate this assumption.
+% For many phenotypes, one sex is more variable than the other, some experimenters make more precise measurements than others, and specific genetic factors influence environmental sensitivity.
+% In these cases, mean-variance QTL mapping provides higher power and better protection against false positives.
+% It also allows for detection of QTL that influence phenotype variance, termed vQTL and QTL that influence some mixture of phenotype mean and variance, termed mvQTL.
+% We present \texttt{R} package \texttt{vqtl}.
+% This package makes it easy for geneticists to apply the mean-variance QTL mapping approach, control family-wide error rate (FWER), and visualize and interpret their results.
 \end{abstract}
 
 
@@ -74,9 +78,9 @@ In the companion pieces, we describe an elaboration of ``vQTL'' analysis, the me
 In support of other researchers who may be interested in mvQTL mapping, we created \texttt{R} package \texttt{vqtl}, which provides functions for conducting genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
 \texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
 
-Here, we demonstrate typical use of the \texttt{vqtl} package.
-The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
-
+Here, we demonstrate typical use of the \texttt{vqtl} package to discover three QTL.
+% a QTL that influence phenotype mean (an mQTL), a QTL that influences phenotype variance (vQTL) and a QTL that influences a combination of mean and variance (an mvQTL).
+% The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
 
 
 \section*{Simulation of an Illustrative Dataset}
@@ -134,7 +138,7 @@ This option can be useful in assessing the trends in the various genetic compone
 Unlike \texttt{scanone}, which only tests for association between each locus and the phenotype mean, \texttt{scanonevar} computes three tests for each locus -- association with phenotype mean, association with phenotype variance, and joint association with phenotype mean and variance.
 The statistic for each of these associations is a LOD score, a the log of the ratio of the likelihood of the alternative model to the null model.
 The results of \texttt{scanonevar} on each of the four described phenotypes is shown in figure~\ref{fig:lod_score_scans}.
-The details of the null and alternative models used in each of the three tests can be found in the companion article [Corty2017a, Corty2017b].
+The details of the null and alternative models used in each of the three tests can be found in the companion article [CompanionC].
 
 
 \subsection*{The LOD Score -- Problems and an Alternative}
@@ -158,7 +162,7 @@ To put all genetic loci and all three tests on a level playing field, we conside
 (1) Asymptotic $p$-values are calculated by \texttt{scanonevar} using the $\chi^2$ distribution with the appropriate degrees of freedom for each locus.
 Though these $p$-values overcome the questions 1 through 3 of working with LOD scores described above, they leave problem 4 unresolved.
 (2) Empirical, family-wide error rate (FWER)-corrected $p$-values resolve all the above issues with interpreting LOD scores, thus they are the recommended means of assessing the significance of QTL mapping results.
-Methods for calculating them are described in the next section.
+Statistical methods for empirical FWER control in mean-variance QTL mapping are described in [CompanionC].
 
 The object returned by the \texttt{scanonevar} function has class \texttt{scanonevar}.
 Calling \texttt{plot} on this object produces a publication-quality plot that shows the three association statistics at each locus.
@@ -220,9 +224,9 @@ These $p$-values are FWER-corrected, so a value of $0.05$ for a specific test at
 Additionally, the returned object contains a list of the per-genome-scan maximum observed LOD for each test and each chromosome type.
 
 Accurate estimation of the FWER-controlled $p$-values requires many permutation scans.
-We recommend at least 100, and rarely more than 1000 \citep{Churchill1994,Carlborg2002}.
+We recommend 1000 \citep{Churchill1994,Carlborg2002}.
 These permutation scans can be run on multiple processors by specifying the optional \texttt{n.cores} argument, which defaults to the total number of cores on the computer minus 2.
-On an Intel Core i5, running 100 permutations on this dataset packtakes about five minutes.
+On an Intel Core i5, running 100 permutations on this dataset takes about five minutes.
 When many phenotypes are studied, or if faster runtimes are needed, these permutation scans can be broken into groups with different values for \texttt{random.seed}, run on separate computers, and combined with the \texttt{c} function.
 This function combines the permutations from all the inputted scans, re-evaluates the observed LOD scores in the context of all available permutations, and returns a new \texttt{scanonevar} object with more precisely estimated empirical $p$-values.
 
@@ -256,10 +260,9 @@ Because the \texttt{vqtl} package models both mean and variance effects, existin
 To investigate the results of a \texttt{vqtl} scan at one particular locus, we developed the \texttt{mean\_var\_plot}.
 This plot shows information about the phenotype mean on the horizontal axis and information about the phenotype variance on the vertical axis.
 There are both ``model-free'' and ``model-based'' versions of this plotting utility.
-Here we show only the ``model-based'' version.
+For brevity, we show only the more useful ``model-based'' version.
 
-Figure~\ref{fig:mean_var_plots} shows a model-based \texttt{mean\_var\_plot} for each of the four phenotypes.
-In each plot, the location of the dot shows the estimated mean and standard deviation of each genotype group, with the mean indicated by the horizontal position and the standard deviation indicated by the vertical position.
+In each \texttt{mean\_var\_plot} in Figure~\ref{fig:mean_var_plots}, the location of the dot shows the estimated mean and standard deviation of each genotype group, with the mean indicated by the horizontal position and the standard deviation indicated by the vertical position.
 The horizontal lines extending to the left and right from each dot show the standard error of the mean estimate, and the vertical lines extending up and down from each dot show the standard error of the standard deviation estimate.
 There are two types of grouping factors considered by the function \texttt{mean\_var\_plot\_model\_based}:
 (1) \texttt{focal.groups} are groups that are modeled and the prediction for each group is plotted.
@@ -283,16 +286,16 @@ For \texttt{phenotype4}, the \texttt{mean\_var\_plot} is shown at the most signi
 The estimates fo the genotype effects differ somewhat in both the horizontal and vertical axes, but not as much on the horizontal axis as \texttt{phenotype2} and not as much on the vertical axis as \texttt{phenotype3}.
 This pattern is consistent with the fact that there is a genetic effect on both phenotype mean and variance and with the highly significant $p$-value for the mvQTL test and the marginally significant $p$-values for the other two tests.
 
-Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} and \texttt{mean\_var\_plot\_model\_free} are described in the online vignette for the \texttt{vqtl} package, available at \texttt{github.com/rcorty}.
+Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} and \texttt{mean\_var\_plot\_model\_free} are described in the online vignette for the \texttt{vqtl} package, available at \texttt{https://CRAN.R-project.org/package=vqtl}.
 
 
-Finally, it is important to assess the genetic precision of a discovered QTL.
-This step allows for bioinformatic follow-up.
-The function \texttt{scanonevar.boot} implements the non-parametric and Bayesian bootstrap.
+Finally, it is important to assess the genetic precision of a discovered QTL for bioinformatic follow-up.
+The function \texttt{scanonevar.boot} implements the non-parametric bootstrap \cite{Visscher1996}.
 This function takes, as arguments, a \texttt{scanonevar} object, the name of the chromosome containing the QTL, and \texttt{num.resamples}, the number of bootstrap resamplings desired.
+As with \texttt{scanonevar.perm}, the \texttt{n.cores} argument can be used to spread the bootstraps over many computational cores.
 
-In our experience, 1000 resamples is an appropriate number to establish 80\% and 90\% confidence intervals.
-With the datasets simulated here, it takes 15 minutes to run 500 bootstrap resamples on an Intel core i5.
+We recommend 1000 resamples to establish 80\% and 90\% confidence intervals.
+With the datasets simulated here, it takes 20 minutes to run 1000 bootstrap resamples on an Intel core i5.
 
 % \section*{Mathematical Details}
 
@@ -305,10 +308,10 @@ With the datasets simulated here, it takes 15 minutes to run 500 bootstrap resam
 
 \section*{Conclusion}
 
-We have demonstrated typical usage of the \texttt{vqtl} \texttt{R} package for QTL mapping in experimental crosses.
-This package is most appropriate for crosses and phenotypes where nuisance covariates or genetic factors are known or suspected to influence phenotype variance.
+We have demonstrated typical usage of the \texttt{R} package \texttt{vqtl} for mean-variance QTL mapping in experimental crosses.
+This package is appropriate for crosses and phenotypes where genetic factors or covariates or are known or suspected to influence phenotype variance.
 In the case of genetic factors, they can be mapped.
-In the case of nuisance covariates, they can be accommodated.
+In the case of covariates, they can be accommodated, the benefits of which are described in the companion article [BVH\_paper].
 
 The central function of this package, \texttt{scanonevar}, carries out the initial genome scan.
 The permutation function, \texttt{scanonevar.perm}, executes a set of permutations to empirically estimate a FWER-controlling $p$-value for each observed LOD score.
