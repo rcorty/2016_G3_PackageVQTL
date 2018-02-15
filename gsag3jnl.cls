@@ -2,12 +2,12 @@
 % Genetics Society of America's G3: Genes | Genomes |
 % Genetics Journal
 %
-% Version: 1.0, 2015/05/01
+% Version: 1.3, 2017/06/14
 %
 % Produced by Overleaf (www.overleaf.com)
 %
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{gsag3jnl}[01/05/2015, v1.0]
+\ProvidesClass{gsag3jnl}[14/06/2017, v1.3]
 \AtEndOfClass{\RequirePackage[tracking=smallcaps]{microtype}}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{extarticle}}
 \ProcessOptions*
@@ -40,7 +40,7 @@
 \newdateformat{monthyeardate}{%
   \monthname[\THEMONTH] \THEYEAR}
 
-\RequirePackage{enumitem}
+\RequirePackage{enumitem} 
 \setlist[itemize]{noitemsep}
 
 
@@ -57,7 +57,7 @@
 % Choose article type
 \newcommand*{\articletype}[1]{%
   \RequirePackage{styles/#1}}
-
+  
 % Options for element switching
 \RequirePackage{xifthen}
 \newboolean{displaycopyright}
@@ -65,7 +65,7 @@
 % Copyright statement
 \RequirePackage{textcomp} % For copyright symbol styling
 \makeatletter
-\newcommand{\copyrightstatement}{Copyright \, \textcopyright\, \the\year{} \@correspondingauthor \hspace{0.2em} \textit{et al.} }
+\newcommand{\copyrightstatement}{Copyright  \textcopyright{} \the\year{} by the Genetics Society of America}
 \makeatother
 
 % Graphics, tables and other formatting
@@ -134,7 +134,7 @@
 \fancypagestyle{firststyle}{
    \fancyhead[L]{}
    \fancyhead[R]{}
-    \fancyfoot[L]{\includegraphics[width=96pt]{G3_Horizontal_Color_High_Resolution.jpg}}
+    \fancyfoot[L]{\includegraphics[height=1em]{G3Logo_Horiz}}
    \fancyfoot[R]{{\footerfont Volume X\hspace{1em}|\hspace{1em}\monthyeardate\today\hspace{1em}|\hspace{1em}\thepage\ }}
 }
 
@@ -145,10 +145,10 @@
 \cfoot{}
 \rfoot{}
 \makeatletter
-\fancyfoot[LE]{{\footerfont \thepage\hspace{1em}|\hspace{1em}\@correspondingauthor \hspace{0.2em} \textit{et al.} }}
+\fancyfoot[LE]{{\footerfont \thepage\hspace{1em}|\hspace{1em}\@runningauthor \hspace{0.2em}}}
 \fancyfoot[RO]{{\footerfont Volume X\hspace{1em}\monthyeardate\today\hspace{1em}|\hspace{1em}\@runningtitle\hspace{1em}|\hspace{1em}\thepage\ }}
 \makeatother
-\fancyfoot[LO,RE]{\includegraphics[width=96pt]{G3_Horizontal_Color_High_Resolution.jpg}}
+\fancyfoot[LO,RE]{\includegraphics[height=1em]{G3Logo_Horiz}}
 \renewcommand{\headrulewidth}{0pt}% % No header rule
 \renewcommand{\footrulewidth}{0pt}% % No footer rule
 
@@ -156,7 +156,7 @@
 \newcommand{\logomark}{
 \begin{textblock}{200}(36,36)
 \begin{flushleft}
-\includegraphics[width=126pt]{G3_Horizontal_Color_High_Resolution.jpg}
+\includegraphics[width=1.7129in]{G3Logo_Vert}
 \end{flushleft}
 \end{textblock}
 }
@@ -172,13 +172,17 @@
 
 % Colored margin box
 \newcommand{\marginmark}{
-\begin{textblock}{72}(506,0)
+\begin{textblock}{72}(506,0) 
 \noindent
 \begin{tikzpicture}[x=1,y=1]
 \fill[color=color2] (0,0) rectangle (72,36);
 \end{tikzpicture}
 \end{textblock}
 }
+
+%% 13 July 2016: make sure sections are unnumbered
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{0}
 
 % Section/subsection/paragraph set-up
 \RequirePackage[explicit]{titlesec}
@@ -219,7 +223,9 @@
 \titlespacing*{\paragraph}{0pc}{1.5ex \@plus2pt \@minus1pt}{12pt}
 
 % Article meta data additional fields
-\newcommand{\correspondingauthor}[1]{\def\@correspondingauthor{#1}}
+\newcommand{\runningauthor}[1]{\def\@runningauthor{#1}}
+%% Backward compatibility
+\newcommand{\correspondingauthor}[1]{\runningauthor{#1}}
 \newcommand{\keywords}[1]{\def\@keywords{#1}}
 \newcommand{\runningtitle}[1]{\def\@runningtitle{#1}}
 
@@ -314,7 +320,8 @@ THE ABSTRACT\vskip12pt}\let\go\relax\fi
 }
 
 \newcommand{\firstpagefootnote}{\blfootnote{\copyrightfont \ifthenelse{\boolean{displaycopyright}}{\copyrightstatement}{}\\%
-Manuscript compiled: \today}}
+Manuscript compiled: \today%
+}}
 
 \newenvironment{tableminipage}[1]{\begin{minipage}{#1}\renewcommand\footnoterule{ \kern -1ex}%
 \setlength{\myFootnoteLabel}{0.5em}%

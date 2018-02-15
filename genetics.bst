@@ -1,3 +1,5 @@
+%% Updated 28 March, 2017 by Overleaf --
+%%   Truncates >5 authors to et al. in references list.
 %% 
 %% This is file `genetics.bst', generated 
 %% on <1996/3/21> with the docstrip utility (2.2i).
@@ -409,6 +411,16 @@ FUNCTION {format.names}
       if$
       nameptr #1 >
         {
+        %% Added 28 March 2017: truncate >5 authors
+          nameptr #5
+          #1 + =
+          numnames #5
+          > and
+            { "others" 't :=
+              #1 'namesleft := }
+            'skip$
+          if$
+          %%% End addition
           namesleft #1 >
             { ", " * t * }
             {
