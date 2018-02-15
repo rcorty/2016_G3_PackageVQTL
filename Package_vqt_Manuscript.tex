@@ -1,44 +1,23 @@
-\documentclass{article}
+\documentclass[9pt,twocolumn,twoside]{gsag3jnl}
 
-% \articletype{inv} % article type
-
-\usepackage[margin = 1in]{geometry}
-
-\usepackage[style=authoryear,natbib=true]{biblatex}
-\bibliography{../../bibtex/10_Aim1.bib}
-
-\usepackage{amsmath}
-\usepackage{bm}
-\usepackage{tabu}
-\usepackage{graphicx}
-\usepackage{caption}
 \usepackage{subcaption}
 
-\input{styles/Corty2015commands}
+\articletype{inv} % article type
 
 \title{\texttt{vqtl}: An \texttt{R} package for Mean-Variance QTL Mapping}
-\author{Robert W. Corty and William Valdar}
-% \author[$\ast$]{Robert W. Corty}
-% \author[$\ast, 1$]{William Valdar}
-% \affil[$\ast$]{Department of Genetics, University of North Carolina at Chapel Hill}
 
+\author[$\ast$,1]{Robert W. Corty}
+\author[$\ast, 1$]{William Valdar}
 
-% \keywords{QTL mapping, variance heterogeneity}
-% \runningtitle{R package mvqtl} % For use in the footer
-% \correspondingauthor{Robert Corty}
-% \setboolean{displaycopyright}{true}
+\affil[$\ast$]{University of North Carolina at Chapel Hill, Department of Genetics}
 
+\keywords{QTL mapping\\variance heterogeneity\\vQTL, mvQTL\\R, DGLM}
 
-\begin{document}
+\runningtitle{Package vqtl} % For use in the footer 
 
-\maketitle
-% \thispagestyle{firststyle}
-% \logomark
-% \articletypemark
-% \marginmark
-% \firstpagefootnote
-% \correspondingauthoraffiliation{Correspondence e-mail: william.valdar@unc.edu}
-% \vspace{-11pt}%
+\runningauthor{Corty and Valdar}
+
+\graphicspath{{./images/}}
 
 
 \begin{abstract}
@@ -57,28 +36,66 @@ Because this package is interoperable with the popular \texttt{R/qtl} package an
 % This package makes it easy for geneticists to apply the mean-variance QTL mapping approach, control family-wide error rate (FWER), and visualize and interpret their results.
 \end{abstract}
 
+\setboolean{displaycopyright}{true}
+
+
+
+
+% \usepackage[margin = 1in]{geometry}
+
+% \usepackage[style=authoryear,natbib=true]{biblatex}
+% \bibliography{../../bibtex/10_Aim1.bib}
+
+% \usepackage{amsmath}
+% \usepackage{bm}
+% \usepackage{tabu}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{subcaption}
+
+% \input{styles/Corty2015commands}
+
+
+
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{firststyle}
+\logomark
+\articletypemark
+\marginmark
+\firstpagefootnote
+\correspondingauthoraffiliation{Correspondence e-mail: william.valdar@unc.edu}
+\vspace{-24pt}%
+
+
 
 
 \section*{Introduction}
 
-QTL mapping studies have provided important insights on nearly every trait of interest in human health and disease.
+% significance of the software or resource presented
+QTL mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health and disease.
 Advances in breeding, phenotyping \citep{Yang2014a}, and genotyping \citep{Williams1990} model organisms as well as statistical methods \citep{Lander1989a} and software tools \citep{Broman2003} have supported these discoveries.
 
-One common assumption in the design and analysis of these studies is that, across all organisms in a study population, the residual variance is constant.
+% discuss novelty
+One common assumption in the design and analysis of many of these studies is that, across all organisms in a study population, the residual variance is constant.
 Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the residual variance of the trait.
 
 % In fact, gene-gene interactions, gene-environment interactions, genetic factors that influence microenvironmental sensitivity, and environmental factors can influence residual variance.
 
-
-``vQTL'' analysis challenges that assumption by seeking to identify genetic factors that influence the extent of residual variation \citep{Ronnegard2011a,Ronnegard2012,Cao2014}.
-In the companion pieces, we describe an elaboration of ``vQTL'' analysis, the mean-variance QTL mapping approach and use it to discover new QTL from existing data resources [companion B, C].
+Recent variance QTL (vQTL) analyses have challenged that assumption by seeking to identify genetic factors that influence the extent of residual variation \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
+In the companion pieces, we describe an elaboration of vQTL analysis, which we term ``mean-variance QTL mapping'', and use it to discover new QTL from existing data resources [companion B, C].
 % This approach allows for QTL mapping in the presence of both genetic and non-genetic effects on phenotype mean and variance.
 % We compare its behavior to other QTL mapping approaches, and illustrate the discovery of a new QTL from an existing study.
 
+% overview of the software or resource
 In support of other researchers who may be interested in mvQTL mapping, we created \texttt{R} package \texttt{vqtl}, which provides functions for conducting genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
-\texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
 
-Here, we demonstrate typical use of the \texttt{vqtl} package to discover three QTL.
+% describe how researchers can access it.
+\texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
+Here, we demonstrate typical use of the \texttt{vqtl} package to analyze four simulated traits and discover three QTL.
 % a QTL that influence phenotype mean (an mQTL), a QTL that influences phenotype variance (vQTL) and a QTL that influences a combination of mean and variance (an mvQTL).
 % The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
 
@@ -106,16 +123,16 @@ All the same analyses and plots that are shown for \texttt{phenotype1} through \
 \section*{Genome Scans}
 
 \begin{figure}[t]
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype1.pdf}
     \end{subfigure}
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype2.pdf}
     \end{subfigure}
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype3.pdf}
     \end{subfigure}
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype4.pdf}
     \end{subfigure}
     \caption{For each of the four simulated phenotypes, the genome scan shows the LOD score of each test -- mean, variance, and joint -- in blue, red, and black, respectively.  The traditional test is in green and globally similar to the mean test. \label{fig:lod_score_scans}}
@@ -175,41 +192,44 @@ With this example dataset, it takes five seconds to run one genome scan on a Int
 \section*{Assess the Significance of Results}
 
 \begin{figure}[t]
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype1.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype2.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype3.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype4.pdf}
     \end{subfigure}
 
     \caption{For each of the four simulated phenotypes, the genome scan shows the -log10 of the FWER-corrected $p$-value of each test -- mean, variance, and joint -- in blue, red, and black, respectively. Thus, a value of 3 implies that the quantity of evidence against the null is such that we expect to see this much or more evidence once per thousand genome scans when there is no true effect. \label{fig:empir_p_scans}}
 \end{figure}
 
-The $p$-value assigned to each locus by calculating the position of its calculated LOD score in its null distribution answers the question, ``How probable is it to observe this much of a deviation from the null at this locus, given that there is no true effect?''
-This question is not entirely relevant for genetic mapping, however, because we typically test for association at many loci, with no special interest in any individual locus \textit{a priori}.
-Thus, a more appropriate $p$-value would answer the question, ``How probable is it to observe this much or more deviation from the null at \textit{some} locus in the genome, given that there are no true effects?''
-This is precisely the reasoning behind the family-wide-error-rate (FWER) controlling procedure we illustrate below.
 
-To calculate a FWER-controlling $p$-value, one typically must estimate the effective number of statistical tests conducted.
-The effective number of tests in a genome scan, however, is difficult to estimate.
-One lower bound is the number of chromosomes.
-Due to the randomization in meiosis no two non-syntenic loci are correlated in an experimental cross and therefore tests on different chromosomes are always independent.
-But there are many non-identical tests conducted on each chromosome, so the number of chromosomes is an under-estimate.
-One upper bound on the effective number of tests is the total number of loci.
-But, loci on the same chromosome are often in linkage disequilibrium, therefore the tests are not independent and the total number of loci is an over-estimate \citep{Lander1989a}.
+% The $p$-value assigned to each locus by calculating the position of its calculated LOD score in its null distribution answers the question, ``How probable is it to observe this much of a deviation from the null at this locus, given that there is no true effect?''
+% This question is not entirely relevant for genetic mapping, however, because we typically test for association at many loci, with no special interest in any individual locus \textit{a priori}.
+% Thus, a more appropriate $p$-value would answer the question, ``How probable is it to observe this much or more deviation from the null at \textit{some} locus in the genome, given that there are no true effects?''
+% This is precisely the reasoning behind the family-wide-error-rate (FWER) controlling procedure we illustrate below.
 
+% To calculate a FWER-controlling $p$-value, one typically must estimate the effective number of statistical tests conducted.
+% The effective number of tests in a genome scan, however, is difficult to estimate.
+% One lower bound is the number of chromosomes.
+% Due to the randomization in meiosis no two non-syntenic loci are correlated in an experimental cross and therefore tests on different chromosomes are always independent.
+% But there are many non-identical tests conducted on each chromosome, so the number of chromosomes is an under-estimate.
+% One upper bound on the effective number of tests is the total number of loci.
+% But, loci on the same chromosome are often in linkage disequilibrium, therefore the tests are not independent and the total number of loci is an over-estimate \citep{Lander1989a}.
+
+Given the many tests involved in a genome scan, some multiple hypothesis testing correction must be made.
+We advocate using a permutation-based approach, detailed in [CompanionC] to control the family wise error rate (FWER).
 Like previous work on permutation-based thresholds for genetic mapping \citep{Churchill1994,Carlborg2002}, our permutation approach sidesteps estimation of the effective number of tests.
-We conduct many permuted genomes scans, each executing a carefully-constructed model comparison to maintain all mean and variance effects of covariates and any non-focal genetic effects on mean and variance.
-The details of these model comparisons are provided in the companion article [Corty2017a].
+
+This approach involves conducting many permuted genomes scans, each executing a model comparison that maintains all mean and variance effects of covariates and any non-focal genetic factors.
 For each test, we extract the highest observed value of the test statistic from each permutation scan and use those to model a generalized extreme value (GEV) density \citep{Stephenson2002}.
 The observed LOD scores from the genome scan are then transformed by the cumulative distribution function of the extreme value density to estimate the FWER-controlling $p$-values.
 This approach is implemented in the function, \texttt{scanonevar.perm}, which requires two inputs:
@@ -233,31 +253,39 @@ This function combines the permutations from all the inputted scans, re-evaluate
 
 
 
-\section*{Investigate Significant Findings}
+\section*{Communicate Significant Findings}
 
 \begin{figure}[ht]
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen1.pdf}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen2.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen3.pdf}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen4.pdf}
     \end{subfigure}
 
-    \caption{\texttt{mean\_var\_plot}s show the estimated genotype effects at a locus, with mean effects on the horizontal axis and variance effects on the vertical axis.  Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.  More information on the interpretation of these plots is provided in the `Investigate Significant Findings' section. \label{fig:mean_var_plots}}
+    \caption{
+        \texttt{mean\_var\_plot}s show the estimated genotype effects at a locus, with mean effects on the horizontal axis and variance effects on the vertical axis.
+        Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.
+        For \texttt{phenotype1}, the pattern of overlapping estimates and standard errors is consistent with the fact that there are no genetic effects, and the $p$-value was not statistically significant at any locus.
+        For \texttt{phenotype2}, the pattern of horizontal, but not vertical, separation visually illustrates the identified mQTL.
+        For \texttt{phenotype3}, the pattern of vertical, but not horizontal, separation visually illustrates the identified vQTL.
+        For \texttt{phenotype4}, the pattern of two dimensional separation without either total horizontal or vertical separation illustrates an mvQTL with neither mean nor variance effect strong enough to define an mQTL or vQTL.
+        \label{fig:mean_var_plots}
+    }
 \end{figure}
 
 Having identified some QTL, we want to visualize the estimated genetic and covariate effects at the QTL.
 Because the \texttt{vqtl} package models both mean and variance effects, existing plotting utilities aren't able to display the entirety of the modeling results.
-To investigate the results of a \texttt{vqtl} scan at one particular locus, we developed the \texttt{mean\_var\_plot}.
+To understand and communicate the results of a \texttt{vqtl} scan at one particular locus, we developed the \texttt{mean\_var\_plot}.
 This plot shows information about the phenotype mean on the horizontal axis and information about the phenotype variance on the vertical axis.
 There are both ``model-free'' and ``model-based'' versions of this plotting utility.
 For brevity, we show only the more useful ``model-based'' version.
@@ -270,24 +298,11 @@ For example, a genetic marker is the \texttt{focal.group} in each plot in figure
 (2) \texttt{nuisance.groups} are groups that are modeled, but then averaged over before plotting.
 When there are many grouping factors thought to play a role in determining the mean and variance of an individual's phenotype, such as sex, treatment, and batch, we recommend putting just one or two in \texttt{focal.groups} and the others in \texttt{nuisance.groups} for clarity, cycling through which are displayed to gain a thorough understanding of the factors that determine the mean and variance of the phenotype.
 
-For \texttt{phenotype1}, the \texttt{mean\_var\_plot} is shown at the first marker of the first chromosome.
-The estimates of the genotype effects on phenotype mean and variance are within one standard error of each other.
-This pattern is consistent with the fact that there are no genetic effects, and the $p$-value was not statistically significant at any locus.
+The identification of an mQTL is consistent with horizontal distances between genotype groups that exceed the horizontal standard error bars.
+The identification of a vQTL is consistent with vertical distances between genotype groups that exceed the vertical standard error bars.
+And the identification of an mvQTL is consistent with euclidean distance between genotype groups that exceed the standard error density implied by both the horizontal and vertical standard errors.
 
-For \texttt{phenotype2}, the \texttt{mean\_var\_plot} is shown at the most significant marker, the sixth marker on the first chromosome.
-The estimates of the genotype effects differ in the horizontal axis, but not the vertical axis.
-This pattern is consistent with the fact that there is a genetic effect on phenotype mean but none on phenotype variance and with the highly significant $p$-value for the mQTL test, but non-significant $p$-value for the vQTL test.
-
-For \texttt{phenotype3}, the \texttt{mean\_var\_plot} is shown at the most significant marker, the sixth marker on the second chromosome.
-The estimates of the genotype effects differ in the vertical axis, but on on the horizontal axis.
-This pattern is consistent with the fact that there is a genetic effect on phenotype variance but none on phenotype mean and with the highly significant $p$-value for the vQTL test but non-significant $p$-value for the mQTL test.
-
-For \texttt{phenotype4}, the \texttt{mean\_var\_plot} is shown at the most significant marker, the sixth marker on the third chromosome.
-The estimates fo the genotype effects differ somewhat in both the horizontal and vertical axes, but not as much on the horizontal axis as \texttt{phenotype2} and not as much on the vertical axis as \texttt{phenotype3}.
-This pattern is consistent with the fact that there is a genetic effect on both phenotype mean and variance and with the highly significant $p$-value for the mvQTL test and the marginally significant $p$-values for the other two tests.
-
-Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} and \texttt{mean\_var\_plot\_model\_free} are described in the online vignette for the \texttt{vqtl} package, available at \texttt{https://CRAN.R-project.org/package=vqtl}.
-
+Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} and \texttt{mean\_var\_plot\_model\_free} are described in the online documentation, available on CRAN.
 
 Finally, it is important to assess the genetic precision of a discovered QTL for bioinformatic follow-up.
 The function \texttt{scanonevar.boot} implements the non-parametric bootstrap \cite{Visscher1996}.
@@ -311,35 +326,46 @@ With the datasets simulated here, it takes 20 minutes to run 1000 bootstrap resa
 We have demonstrated typical usage of the \texttt{R} package \texttt{vqtl} for mean-variance QTL mapping in experimental crosses.
 This package is appropriate for crosses and phenotypes where genetic factors or covariates or are known or suspected to influence phenotype variance.
 In the case of genetic factors, they can be mapped.
-In the case of covariates, they can be accommodated, the benefits of which are described in the companion article [BVH\_paper].
+In the case of covariates, they can be accommodated, which can increase power and control false positive rate, as described in a companion article [CompanionC].
 
-The central function of this package, \texttt{scanonevar}, carries out the initial genome scan.
-The permutation function, \texttt{scanonevar.perm}, executes a set of permutations to empirically estimate a FWER-controlling $p$-value for each observed LOD score.
-A suite of plotting functions, e.g. the \texttt{mean\_var\_plot}, allows geneticists to evaluate the allelic and covariate effects that underlie detected signals.
-The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling to assess the genetic precision of a QTL and extablish a confidence interval. 
+\section*{Resources}
+The scripts used to create the data and plots published here are available at \url{ZENODO}.
+The software and its documentation are freely available on \texttt{CRAN} at \url{https://CRAN.R-project.org/package=vqtl}.
+
+% The central function of this package, \texttt{scanonevar}, carries out the initial genome scan.
+% The permutation function, \texttt{scanonevar.perm}, executes a set of permutations to empirically estimate a FWER-controlling $p$-value for each observed LOD score.
+% A suite of plotting functions, e.g. the \texttt{mean\_var\_plot}, allows geneticists to evaluate the allelic and covariate effects that underlie detected signals.
+% The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling to assess the genetic precision of a QTL and extablish a confidence interval. 
+
+\section{Acknowledgements}
+This work was primarily funded by a National Institutes of General Medical Sciences (NIGMS) grant to WV (R01-GM104125) and a National Institutes of Mental Health grant to RWC (F30-MH108265).
+RWC received additional support from NIGMS grant T32-GM067553 and National Library of Medicine grant T32-LM012420.
 
 
-\printbibliography
+\bibliography{10_Aim1}
 
 
 \clearpage
 \newpage
 \section*{Appendix}
 
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{A\arabic{figure}}
+
 \begin{figure}[ht!]
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype1x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype2x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype3x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype4x.pdf}
     \end{subfigure}
 
@@ -349,19 +375,19 @@ The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling 
 
 
 \begin{figure}[ht!]
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype1x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype2x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype3x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[b]{0.9\textwidth}
+    \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype4x.pdf}
     \end{subfigure}
 
@@ -370,19 +396,19 @@ The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling 
 
 
 \begin{figure}[htbp]
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen1x.pdf}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen2x.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen3x.pdf}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.5\linewidth}
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen4x.pdf}
     \end{subfigure}
 
