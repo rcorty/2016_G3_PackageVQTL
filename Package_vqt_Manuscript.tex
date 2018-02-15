@@ -11,7 +11,7 @@
 
 \affil[$\ast$]{University of North Carolina at Chapel Hill, Department of Genetics}
 
-\keywords{QTL mapping\\variance heterogeneity\\vQTL, mvQTL\\R, DGLM}
+\keywords{QTL mapping, vQTL, mvQTL, variance heterogeneity, DGLM, R}
 
 \runningtitle{Package vqtl} % For use in the footer 
 
@@ -369,7 +369,7 @@ RWC received additional support from NIGMS grant T32-GM067553 and National Libra
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype4x.pdf}
     \end{subfigure}
 
-    \caption{For each of the four simulated phenotypes, the genome scan shows the LOD score of each test -- mean, variance, and joint -- in blue, red, and black, respectively.  The traditional test is in green and globally similar to the mean test. \label{fig:apdx_lod_score_scans}}
+    \caption{For each of the four simulated phenotypes with background variance heterogeneity, the genome scan shows the LOD score of each test -- mean, variance, and joint -- in blue, red, and black, respectively.  The traditional test is in green and globally similar to the mean test. \label{fig:apdx_lod_score_scans}}
 \end{figure}
 
 
@@ -391,7 +391,7 @@ RWC received additional support from NIGMS grant T32-GM067553 and National Libra
         \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype4x.pdf}
     \end{subfigure}
 
-    \caption{For each of the four simulated phenotypes, the genome scan shows the -log10 of the FWER-corrected $p$-value of each test -- mean, variance, and joint -- in blue, red, and black, respectively. Thus, a value of 3 implies that the quantity of evidence against the null is such that we expect to see this much or more evidence once per thousand genome scans when there is no true effect. \label{fig:apdx_empir_p_scans}}
+    \caption{For each of the four simulated phenotypes with background variance heterogeneity, the genome scan shows the -log10 of the FWER-corrected $p$-value of each test -- mean, variance, and joint -- in blue, red, and black, respectively. Thus, a value of 3 implies that the quantity of evidence against the null is such that we expect to see this much or more evidence once per thousand genome scans when there is no true effect. \label{fig:apdx_empir_p_scans}}
 \end{figure}
 
 
@@ -412,7 +412,15 @@ RWC received additional support from NIGMS grant T32-GM067553 and National Libra
         \includegraphics[width=\textwidth]{images/mean_var_plot_phen4x.pdf}
     \end{subfigure}
 
-    \caption{\texttt{mean\_var\_plot}s show the estimated genotype effects at a locus, with mean effects on the horizontal axis and variance effects on the vertical axis.  Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.  More information on the interpretation of these plots is provided in the `Investigate Significant Findings' section. \label{fig:apdx_mean_var_plots}}
+    \caption{
+         \texttt{mean\_var\_plot}s show the estimated genotype effects at a locus, with mean effects on the horizontal axis and variance effects on the vertical axis.
+        Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.
+        For \texttt{phenotype1x}, the pattern of overlapping estimates and standard errors is consistent with the fact that there are no genetic effects, and the $p$-value was not statistically significant at any locus.
+        For \texttt{phenotype2x}, the pattern of horizontal, but not vertical, separation visually illustrates the identified mQTL on a background of variance heterogeneity.
+        For \texttt{phenotype3x}, the pattern of vertical, but not horizontal, separation visually illustrates the identified vQTL on a background of variance heterogeneity.
+        For \texttt{phenotype4x}, the pattern of two dimensional separation without either total horizontal or vertical separation illustrates an mvQTL with neither mean nor variance effect strong enough to define an mQTL or vQTL on a background of variance heterogeneity.
+        \label{fig:mean_var_plots}
+    }
 \end{figure}
 
 \end{document}
