@@ -1,0 +1,99 @@
+\newcommand{\N}{\text{N}}
+\newcommand{\twolinecell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+\graphicspath{{images/}}
+
+\newcommand{\redstar}{\textcolor{red}{*}}
+
+\newcommand{\E}{\text{E}}
+\newcommand{\V}{\text{V}}
+
+\newcommand{\LM}{LM\xspace}
+\newcommand{\Lev}{Levene's test\xspace}
+
+\newcommand{\Caom}{Cao\textsubscript{M}\xspace}
+\newcommand{\Caov}{Cao\textsubscript{V}\xspace}
+\newcommand{\Caomv}{Cao\textsubscript{MV}\xspace}
+
+\newcommand{\DGLMm}{DGLM\textsubscript{M}\xspace}
+\newcommand{\DGLMv}{DGLM\textsubscript{V}\xspace}
+\newcommand{\DGLMmv}{DGLM\textsubscript{MV}\xspace}
+
+\newcommand{\gAA}{\text{AA}}
+\newcommand{\gAB}{\text{AB}}
+\newcommand{\gBB}{\text{BB}}
+
+
+\newcommand{\FPR}{\text{FPR}}
+
+\newcommand{\beginsupplement}{%
+        \setcounter{table}{0}
+        \renewcommand{\thetable}{S\arabic{table}}%
+        \setcounter{figure}{0}
+        \renewcommand{\thefigure}{S\arabic{figure}}%
+        \FloatBarrier
+		\onecolumn
+     }
+     
+% \definecolor{vlow}{rgb}{0.6,0.6,0.95}
+% \definecolor{low}{rgb}{0.8,0.85,0.95}
+% \definecolor{good}{rgb}{1,1,1}
+% \definecolor{high}{rgb}{0.95,0.8,0.75}
+% \definecolor{vhigh}{rgb}{0.95,0.6,0.6}
+
+% \definecolor{poorpower}{RGB}{245, 225, 220}
+% \definecolor{okaypower}{RGB}{245, 200, 195}
+% \definecolor{goodpower}{RGB}{245, 175, 170}
+% \definecolor{highpower}{RGB}{245, 150, 145}
+% \definecolor{vhighpower}{RGB}{245, 130, 125}
+% \definecolor{toppower}{RGB}{245, 110, 105}
+
+\definecolor{power}{rgb}{1, 1, 1}
+
+\renewcommand{\b}{\textbf}
+\renewcommand{\u}{\uline}
+\newcommand{\uu}{\uuline}
+
+
+\def\dout{\bgroup
+ \markoverwith{\lower-0.2ex\hbox
+ {\kern-.03em\vbox{\hrule width.2em\kern0.45ex\hrule}\kern-.03em}}%
+ \ULon}
+\MakeRobust\dout
+
+\newcommand{\WV}[2]{\textcolor{red}{#1\footnote{\textcolor{red}{WV: #2}}}}
+\newcommand{\RC}[2]{\textcolor{purple}{#1\footnote{\textcolor{purple}{RC: #2}}}}
+\newcommand{\WVinline}[1]{\textcolor{red}{#1}}
+\newcommand{\WVst}[1]{\textcolor{red}{\st{#1}}}
+\newcommand{\reply}{\ensuremath{\hookrightarrow}\xspace}
+\newcommand{\AddRefs}[1]{\textcolor{purple}{(Add refs: #1)}}
+\newcommand{\DRAFT}[1]{\textcolor{darkgray}{DRAFT: #1}}
+\newcommand{\CortyRPaper}{\textcolor{purple}{Corty and Valdar 2018+ [r/vqtl]}\xspace}
+\newcommand{\CortyReanalysisPaper}{\textcolor{purple}{Corty \emph{et al} 2018+}\xspace}
+\newcommand{\CortyMethodsPaper}{\textcolor{purple}{Corty and Valdar 2018+ [BVH]}\xspace}
+ 
+\newcommand{\eg}{\emph{e.g.}\xspace}
+\newcommand{\ie}{\emph{i.e.}\xspace}
+\newcommand{\etal}{\emph{et al.}\xspace}
+\newcommand{\indicator}[1]{I_{\left\{ {#1} \right\}}}
+\newcommand{\indep}{\ensuremath{\perp\mkern -10mu \perp}}
+\newcommand{\notindep}{\ensuremath{\perp\mkern -10mu \perp \mkern -16mu \not \mkern 16mu}}
+\newcommand{\T}{^\mathrm{T}}
+\newcommand{\Norm}{\mathrm{N}}
+\newcommand{\veps}{\varepsilon}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\bveps}{\boldsymbol{\varepsilon}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\Expect}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+ 
+\newcommand{\Table}[1]{\textbf{Table}~#1\xspace}
+\newcommand{\Figure}[1]{\textbf{Figure~#1}\xspace}
+\newcommand{\Eq}[1]{\textbf{Eq}~#1\xspace}

@@ -2,6 +2,9 @@
 
 \usepackage{subcaption}
 
+\usepackage{color,xcolor,xspace}
+\input{macros}
+
 \articletype{inv} % article type
 
 \title{\texttt{vqtl}: An \texttt{R} package for Mean-Variance QTL Mapping}
@@ -21,10 +24,10 @@
 
 
 \begin{abstract}
-QTL mapping in experimental crosses is an important component of forward genetics.
-In a companion article, we describe the mean-variance approach to QTL mapping, which addresses both mean and variance heterogeneity.
-Here, we present \texttt{vqtl}, an \texttt{R} package that implements mean-variance QTL mapping.
-The goal of \texttt{vqtl} is to provide a straightforward tool for geneticists to perform mean-variance genome scans, assess the statistical significance of their findings, and communicate their results with informative plots.
+We present \texttt{vqtl}, an \texttt{R} package that implements mean-variance QTL mapping.
+This approach for QTL mapping tests for genetic loci that influence the mean of the phenotype, termed mean QTL, the variance of the phenotype, termed variance QTL, or some combination of the two, termed mean-variance QTL.
+It is unique in its ability to correct for variance heterogeneity arising from nuisance factors, such as sex, batch, or housing.
+This package provides a functions for geneticists to conduct genome scans using the mean-variance approach to QTL mapping, conduct permutations to assess the statistical significance of their findings, and make informative plots to communicate their results.
 Because this package is interoperable with the popular \texttt{R/qtl} package and uses many of the same data structures and input patterns, it will be easy for geneticists to analyze future experiments with \texttt{R/vqtl} as well as re-analyze past experiments, possibly discovering new QTL.
 % % Mean-variance QTL mapping, a relatively novel approach to QTL mapping, elevates phenotype variance to the same level of consideration as phenotype mean.
 % Most existing methods for QTL mapping in experimental crosses assume that the residual variance is constant across all individuals.
@@ -75,27 +78,34 @@ Because this package is interoperable with the popular \texttt{R/qtl} package an
 
 \section*{Introduction}
 
-% significance of the software or resource presented
 QTL mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health and disease.
-Advances in breeding, phenotyping \citep{Yang2014a}, and genotyping \citep{Williams1990} model organisms as well as statistical methods \citep{Lander1989a} and software tools \citep{Broman2003} have supported these discoveries.
+Advances in breeding, phenotyping \citep{Yang2014a}, and genotyping \citep{Williams1990} model organisms as well as statistical methods \citep{Lander1989a} and software tools \citep{Broman2003,Mulligan2017} have supported these discoveries.
 
-% discuss novelty
 One common assumption in the design and analysis of many of these studies is that, across all organisms in a study population, the residual variance is constant.
-Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the residual variance of the trait.
+Recent variance QTL (vQTL) analyses have challenged that assumption by seeking to identify genetic factors that influence the extent of residual variation \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
+In the companion pieces, we describe an elaboration of vQTL analysis, which we term ``mean-variance QTL mapping'', and use it to discover new QTL from existing data resources [\CortyReanalysisPaper, \CortyMethodsPaper].
+
+Here, we demonstrate typical usage of \texttt{R} package \texttt{vqtl}, which implements the mean-variance approach to QTL mapping.
+First, we simulate an F2 intercross using the popular \texttt{R/qtl} package.
+For the organisms in this cross, we simulate four example phenotypes --- a phenotype determined entirely by random noise, and one with each of the three kinds of QTL.
+We conduct a genome scan on each of the four phenotypes, using the standard interval mapping approach, and testing for mQTL, vQTL, and mvQTL using the mean-variance approach to QTL mapping.
+We plot all four tests in the units of LOD scores, and discuss some drawbacks to this traditional plotting unit.
+We conduct permutation scans and use the results of the permutation scans to put the original four tests on a level, and more easily interpretable, playing field.
+And finally, we plot the results to communicate the effects that led to the detection of a QTL, and use the bootstrap to estimate its confidence interval.
+
+% Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the residual variance of the trait.
 
 % In fact, gene-gene interactions, gene-environment interactions, genetic factors that influence microenvironmental sensitivity, and environmental factors can influence residual variance.
 
-Recent variance QTL (vQTL) analyses have challenged that assumption by seeking to identify genetic factors that influence the extent of residual variation \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
-In the companion pieces, we describe an elaboration of vQTL analysis, which we term ``mean-variance QTL mapping'', and use it to discover new QTL from existing data resources [companion B, C].
 % This approach allows for QTL mapping in the presence of both genetic and non-genetic effects on phenotype mean and variance.
 % We compare its behavior to other QTL mapping approaches, and illustrate the discovery of a new QTL from an existing study.
 
 % overview of the software or resource
-In support of other researchers who may be interested in mvQTL mapping, we created \texttt{R} package \texttt{vqtl}, which provides functions for conducting genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
+% In support of other researchers who may be interested in mvQTL mapping, we created \texttt{R} package \texttt{vqtl}, which provides functions for conducting genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
 
 % describe how researchers can access it.
-\texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
-Here, we demonstrate typical use of the \texttt{vqtl} package to analyze four simulated traits and discover three QTL.
+% \texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
+% Here, we demonstrate typical use of the \texttt{vqtl} package to analyze four simulated traits and discover three QTL.
 % a QTL that influence phenotype mean (an mQTL), a QTL that influences phenotype variance (vQTL) and a QTL that influences a combination of mean and variance (an mvQTL).
 % The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
 
