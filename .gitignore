@@ -46,3 +46,4 @@ Backup[ ]of[ ]*.numbers/
 .Rproj.user
 .Rhistory
 
+/package_vqtl.sublime-workspace
