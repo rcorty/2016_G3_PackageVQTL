@@ -117,7 +117,7 @@ Last, we describe plots to communicate the effects that led to the detection of 
 % The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
 
 
-\section*{Simulate an F2 Intercross and Four Traits}
+\section*{Example data: Simulated F2 Intercross and Four Traits}
 
 We used the popular \texttt{R/qtl} package to simulate an example experimental cross.
 This cross consisted of 200 male and 200 female F2 offspring, with 3 chromosomes of length 100 cM, each tagged by 11 equally-spaced markers and estimated genotype probabilities at 2cM intervals with \texttt{R/qtl}'s hidden Markov model.
@@ -192,10 +192,10 @@ With this example dataset, it takes five seconds to run one genome scan on a Int
 % Calling \texttt{plot} on this object produces a publication-quality plot that shows the three association statistics at each locus.
 
 
-\subsection*{The LOD Score -- Problems and an Alternative}
-The LOD score is the traditional association statistic in QTL mapping, but its interpretation can be difficult becuase it cannot be compared across tests with different degrees of freedom.
-For example, associations from a sex chromosome are not be comparable with those from an autosome when, as is common, fewer parameters are used to model a locus on a sex chromosome.
-Another example, directly relevant here, is that the mvQTL test has more parameters than the mQTL test and the vQTL test and thus the LOD score is not comparable across those test classes.
+\subsection*{The LOD Score --- Problems and an Alternative}
+\WV{}{Edits to here so far}
+QTL mapping in model organisms is traditionally reported via the LOD score. However, for reporting the results of mean-variance QTL mapping, the LOD score is cumbersome because it is not comparable across tests with different degrees of freedom; in this case, the mvQTL test has twice as many degrees of freedom as the mQTL or vQTL tests, meaning that each type of test needs to be presented with its own threshold.
+
 % (2) Another problem with the LOD score is that it relates only to a single locus.
 % Geneticists must take into account the many hypotheses that are tested.
 % When a significance threshold is established, \eg by permutation, to control family-wise error rate, it divides 
