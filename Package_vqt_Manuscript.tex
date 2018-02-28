@@ -178,13 +178,8 @@ Unlike \texttt{scanone}, which only tests for mQTL, \texttt{scanonevar} computes
 For each type of QTL, the test statistic is the LOD score, the base 10 logarithm of the ratio of the likelihood of an alternative model to that of a null model.
 For all three types of QTL, the alternative model is the same:
 \begin{align*}
-<<<<<<< HEAD
     \text{mean} &= \text{covariate effects} + \text{locus effects}\\
     \log(\text{variance}) &= \text{covariate effects} + \text{locus effects}    
-=======
-    \text{mean} &\propto \text{covariate effects} + \text{locus effects}\\
-    \text{log(variance)} &\propto \text{covariate effects} + \text{locus effects}    
->>>>>>> 973f6129ab20e1b81e8347ecc076ccc8cbd0d917
 \end{align*}
 The mQTL test compares this alternative against a null model that omits the locus effects on phenotype mean; the vQTL test compares it with a null model that omits the locus effects on phenotype variance; and the mvQTL test compares it with a null that omits both locus effects.
 
