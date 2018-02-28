@@ -26,9 +26,9 @@
 \begin{abstract}
 We present \texttt{vqtl}, an \texttt{R} package that implements mean-variance QTL mapping.
 This QTL mapping approach tests for genetic loci that influence the mean of the phenotype, termed mean QTL, the variance of the phenotype, termed variance QTL, or some combination of the two, termed mean-variance QTL.
-It is unique in its ability to correct for variance heterogeneity arising from nuisance factors, such as sex, batch, or housing.
+It is unique in its ability to correct for variance heterogeneity arising not only from the QTL itself but also from nuisance factors, such as sex, batch, or housing.
 This package provides a functions for geneticists to conduct genome scans, run permutations to assess the statistical significance of their findings, and make informative plots to communicate their results.
-Because this package is interoperable with the popular \texttt{R/qtl} package and uses many of the same data structures and input patterns, it will be easy for geneticists to analyze future experiments with \texttt{R/vqtl} as well as re-analyze past experiments, possibly discovering new QTL.
+Because it is interoperable with the popular \texttt{R/qtl} package and uses many of the same data structures and input patterns, it will be straightforward for geneticists to analyze future experiments with \texttt{R/vqtl} as well as re-analyze past experiments, possibly discovering new QTL.
 % % Mean-variance QTL mapping, a relatively novel approach to QTL mapping, elevates phenotype variance to the same level of consideration as phenotype mean.
 % Most existing methods for QTL mapping in experimental crosses assume that the residual variance is constant across all individuals.
 % But common situations violate this assumption.
@@ -78,24 +78,27 @@ Because this package is interoperable with the popular \texttt{R/qtl} package an
 \section*{Introduction}
 
 QTL mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health and disease.
-Advances in model organism genotyping \citep{Williams1990} and phenotyping \citep{Yang2014a} as well as in statistical methods \citep{Lander1989a,Martinez1992} and software tools \citep{Broman2003,Mulligan2017} have supported these discoveries.
+Advances in model organism genotyping \citep{Williams1990} and phenotyping \citep{Yang2014a} as well as in statistical methods \citep{Lander1989a,Martinez1992} and software tools (\eg, \citealt{Broman2003,Mulligan2017}) have supported these discoveries.
 
-Traditional analyses assumed that the mapping population had homogenous variance and it was analyzed in search of ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean.
-But, recent work has challenged that homogenous variance assumption by seeking to identify an additional type of QTL; those that
+Traditional analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the instrinsic stability or noisiness of the phenotype, is identical for each every individual in the mapping population.
+Recent work, however, has challenged the homogenous variance assumption and sought to identify an additional type of QTL --- those that
 %, by driving heterogeneity of epistatic or environmental variance, 
-influence the extent of residual variation, termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
+influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
 
-QTL analysis seeking to identify vQTL has recently entered the mainstream of genetic mapping efforts \citep{Yang2012,Hulse2013,Ayroles2015,Wei2016-lt,Wang2017,Wei2017-tt}, but there remains great heterogeneity among the statistical methods used to conduct these analyses.
+Although the search for vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Wei2016-lt,Wang2017,Wei2017-tt}, the statistical methods used for this purpose remain heterogeneous.
+% and sometimes idiosyncratic, with connections to methods for mapping mean QTL often lacking or unclear.
+% a clear or intuitive connection to methods used for detecting mean QTL.
+%there remains great heterogeneity among the statistical methods used to conduct these analyses.
 We developed a standardized method for QTL mapping that can detect mQTL, vQTL, and a generalization of the two that we term ``mvQTL''.
 This approach, which we term ``mean-variance QTL mapping'', can be applied to intercross and backcross designs.
-In two companion articles, we characterize this method and competitors in the setting where a background factor drives variance heterogeneity [\CortyMethodsPaper] and use it to discover new QTL from two existing data resources [\CortyReanalysisPaper]
+In two companion articles, we characterize this method and competitors in the setting where a background factor drives variance heterogeneity (\CortyMethodsPaper), and use it to discover new QTL from two existing data resources (\CortyReanalysisPaper)
 
 Here, we provide a practical guide to using the \texttt{R} package \texttt{vqtl}, which implements mean-variance QTL mapping.
-First, we simulate an F2 intercross using the popular \texttt{R/qtl} package and four phenotypes --- a phenotype determined entirely by random noise, and one with each of the three kinds of QTL.
-We conduct a genome scan on each of the four phenotypes, using the standard interval mapping approach \citep{Lander1989a}, and the mean-variance approach to QTL mapping, which includes a test for mQTL, a test for vQTL, and a test for mvQTL.
-We plot the association statistics of all four tests in LOD score units and discuss some drawbacks to this traditional plotting unit.
-We conduct permutation scans and use the results of the permutation scans to put the four tests on a level, and more easily interpretable, playing field.
-And finally, we plot the results to communicate the effects that led to the detection of a QTL, and use the bootstrap to estimate its confidence interval.
+First, to generate illustrative data, we simulate an F2 intercross and four phenotypes: one phenotype determined entirely by random noise, and one with each of the three kinds of QTL.
+On each phenotype we then conduct a genome scan using \WV{standard approximations to interval mapping \citep{Lander1989a}}{Surely HK and MC? We don't actually use the Lander mixture model.}, and the mean-variance approach to QTL mapping, which includes a test for mQTL, a test for vQTL, and a test for mvQTL.
+The association statistics of all four tests are then initially plotted in LOD score units, with drawbacks of this plotting unit discussed.
+Permutation scans are used to determine empirically adjusted p-values, and using these in place of LOD scores is shown to to make the results of the four tests more comparable.
+Last, we describe plots to communicate the effects that led to the detection of a QTL, and use the bootstrap to estimate its confidence interval.
 
 % Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the residual variance of the trait.
 
@@ -149,23 +152,20 @@ All the same analyses and plots that are shown for \texttt{phenotype1} through \
     \begin{subfigure}[b]{\linewidth}
         \includegraphics[width=\textwidth]{images/LOD_scan_phenotype4.pdf}
     \end{subfigure}
-    \caption{For each of the four simulated phenotypes, the genome scan shows the LOD score of each test -- mean, variance, and joint -- in blue, red, and black, respectively.  The traditional test is in green and globally similar to the mean test. \label{fig:lod_score_scans}}
+    \caption{For each of the four simulated phenotypes, the genome scan shows the LOD score of each test --- mean, variance, and joint --- in blue, red, and black, respectively.  The traditional test is in green and globally similar to the mean test. \label{fig:lod_score_scans}}
 \end{figure}
 
 The central function for genetic mapping in package \texttt{qtl} is \texttt{scanone} \citep{Broman2003}.
-Analogously, the central function for in package \texttt{vqtl} is \texttt{scanonevar}.
+Analogously, the central function for in package \texttt{vqtl} is \WV{\texttt{scanonevar}}{Did Karl originally implement this? If so, we should say something about it.}.
 It takes three required inputs:
-
 \begin{enumerate}
     \item \texttt{cross} is an object that contains the genetic and phenotypic information from an exerimental cross, as defined in package \texttt{qtl}.
     \item \texttt{mean.formula} is a two-sided formula, specifying the phenotype to be mapped, the covariates to be corrected for, and the QTL terms to be fitted, with keywords \texttt{mean.QTL.add} and \texttt{mean.QTL.dom}
     \item \texttt{var.formula} is a one-sided formula, specifying the variance covariates to be corrected for as well as the QTL terms to be fitted, using keywords \texttt{var.QTL.add} and \texttt{var.QTL.dom}.
 \end{enumerate}
-
 % Optional argument \texttt{chrs} is used to specify a subset of chromosomes to be scanned, defaulting to all chromosomes.
 % Optional argument \texttt{return.covar.effects} is used to specify whether or not fitted effects of all covariates should be returned as part of the scan result, defaulting to \texttt{FALSE}.
 % This option can be useful in assessing the trends in the various genetic components of the phenotype across the genome or in assessing the trends in covariate effects across the genome.
-
 % \RC{}{Doesn't fit.  It's already in the online code. Delete?}
 For example, to scan a phenotype named \texttt{p1}, we run:
 \begin{verbatim}
@@ -174,16 +174,14 @@ scanonevar(cross = test_cross,
     var.formula = ~ sex + var.QTL.add + var.QTL.dom)
 \end{verbatim}
 
-
 Unlike \texttt{scanone}, which only tests for mQTL, \texttt{scanonevar} computes a test statistic for mQTL, vQTL, and mvQTL at each locus.
 For each type of QTL, the test statistic is the LOD score, the base 10 logarithm of the ratio of the likelihood of an alternative model to that of a null model.
 For all three types of QTL, the alternative model is the same:
 \begin{align*}
-    \text{mean} &\propto \text{covariate effects} + \text{locus effects}\\
-    \text{variance} &\propto \text{covariate effects} + \text{locus effects}    
+    \text{mean} &= \text{covariate effects} + \text{locus effects}\\
+    \log(\text{variance}) &= \text{covariate effects} + \text{locus effects}    
 \end{align*}
-
-The mQTL test compares that alternative against a null model that omits the locus effects on phenotype mean, whereas the vQTL test compares it with a null model that omits the locus effects on phenotype variance, and the mvQTL test omits both locus effects.
+The mQTL test compares this alternative against a null model that omits the locus effects on phenotype mean; the vQTL test compares it with a null model that omits the locus effects on phenotype variance; and the mvQTL test compares it with a null that omits both locus effects.
 
 The results of \texttt{scanonevar} on each of the four phenotypes can be plotted directly, with the LOD score as the measure of association (\autoref{fig:lod_score_scans}).
 % The details of the null and alternative models used in each of the three tests can be found in the companion article [CompanionC].
