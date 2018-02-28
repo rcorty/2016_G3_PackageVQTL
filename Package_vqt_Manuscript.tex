@@ -95,7 +95,7 @@ In two companion articles, we characterize this method and competitors in the se
 
 Here, we provide a practical guide to using the \texttt{R} package \texttt{vqtl}, which implements mean-variance QTL mapping.
 First, to generate illustrative data, we simulate an F2 intercross and four phenotypes: one phenotype determined entirely by random noise, and one with each of the three kinds of QTL.
-On each phenotype we then conduct a genome scan using \WV{standard approximations to interval mapping \citep{Lander1989a}}{Surely HK and MC? We don't actually use the Lander mixture model.}, and the mean-variance approach to QTL mapping, which includes a test for mQTL, a test for vQTL, and a test for mvQTL.
+On each phenotype we then conduct a genome scan using standard approximations to interval mapping \citep{Lander1989a,Martinez1992}, and the mean-variance approach to QTL mapping, which includes a test for mQTL, a test for vQTL, and a test for mvQTL.
 The association statistics of all four tests are then initially plotted in LOD score units, with drawbacks of this plotting unit discussed.
 Permutation scans are used to determine empirically adjusted p-values, and using these in place of LOD scores is shown to to make the results of the four tests more comparable.
 Last, we describe plots to communicate the effects that led to the detection of a QTL, and use the bootstrap to estimate its confidence interval.
@@ -156,7 +156,7 @@ All the same analyses and plots that are shown for \texttt{phenotype1} through \
 \end{figure}
 
 The central function for genetic mapping in package \texttt{qtl} is \texttt{scanone} \citep{Broman2003}.
-Analogously, the central function for in package \texttt{vqtl} is \WV{\texttt{scanonevar}}{Did Karl originally implement this? If so, we should say something about it.}.
+Analogously, the central function for mean-variance QTL mapping in package \texttt{vqtl} is \texttt{scanonevar}, building on an early version of \texttt{scanonevar} in package \texttt{qtl}.
 It takes three required inputs:
 \begin{enumerate}
     \item \texttt{cross} is an object that contains the genetic and phenotypic information from an exerimental cross, as defined in package \texttt{qtl}.
