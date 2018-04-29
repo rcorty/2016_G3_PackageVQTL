@@ -1,0 +1,51 @@
+Dear Dr. Valdar: 
+
+
+The main point to be addressed is the inclusion of a benchmark study demonstrating how the software scale (computational time and memory usage) with the number of SNP and sample size. But there are also many other comments that are useful and need to be addressed. 
+
+
+Reviewer #2 (Comments for the Authors (Required)): 
+
+The document presents an R package called vqtl that is capable of detecting QTL for the mean and variance in a given data set of phenotypes and genotypes. In my opinion, the document is valuable to be published in G3. There are a lot of software packages to detect the QTL for the mean, but to my knowledge, the ability to detect the QTL for the variance is a valuable novelty. However, I have some suggestions that, in my opinion, should be addressed before final acceptance. 
+
+Minor task 
+- The authors mention "in almost all traits of interest in human health and disease". The detection of QTL has also been widely used in plant and animal populations. 
+- The authors used a set of simulated data with 3 chromosomes and 11 equally spaced markers. I would like to see an example with a larger genotype data set. 
+- In the simulation, the authors should indicate the magnitude of the genetic variance explained by the QTL. 
+- The CPU time is indicated for the data set of the example. I would like to have the CPU time information in a more realistic data set. Perhaps authors can use a free data set from the web. 
+- I think the authors should also indicate if the software is capable in terms of computing power to analyze the data from SNP genotyping devices or even sequencing. 
+
+
+
+
+Editor Comments: 
+
+This will be a paper useful for those interested on the study of genes affecting environmental variation. The paper is succinct and well written. 
+I have only two major recommendation: 
+
+(1) As suggested by Reviewer 1 it will be very useful to have a benchmark study with times/memory requirements as a function of number of markers and sample size. This study will give those interested on using the package an understanding of how this package would scale. It will be important to include in the discussion also elements related to scalability: is the package suitable for very large-p/large-n? 
+
+(2) There is a very rich literature in the study of genetic control in environmental variance in both plant and animal breeding as well as model organisms. This literature should be mentioned. This comment may also apply to some of the companion papers. 
+
+
+## A few references on genetic control of environmental variance emerging from animals and plants 
+
+
+Mulder HA, Bijma P, Hill WG. Selection for Uniformity in Livestock by Exploiting Genetic Heterogeneity of Residual Variance. Genet Sel Evol. 2008;40:37-59. 
+
+Hill WG, Zhang XS. Effects on Phenotypic Variability of Directional Selection Arising Through Genetic Differences in Residual Variability. Genet Res (Camb). 2004;83:121-132. 
+
+
+Yang Y, Schön CC, Sorensen D. The genetics of environmental variation for dry matter grain yield in maize. Genet Res (Camb). 2012;94:113-119. 
+
+Ibáñez N, Moreno A, Nieto B, Piqueras P, Salgado C, Gutierrez JP. Genetic Parameters Related to Environmental Variability of Weight of Mice; Signs of Correlated Canalised Response. Genet Sel Evol. 2008;40:279-293. 
+
+Ibáñez N, Varona L, Sorensen D, Noguera JL. A study of heterogeneity of environmental variance for slaughter weight in pigs. Animal. 2007;2:19-26. 
+
+Sørensen P, de los Campos G, Morgante F, Mackay TFC, Sorensen D. Genetic Control of Environmental Variation of Two Quantitative Traits of Drosophila melanogaster Revealed by Whole-Genome Sequencing. Genetics. 2015;201(2):487-497. doi:10.1534/genetics.115.180273. 
+
+
+
+
+Senior Editor Comments: 
+Now that you have all three manuscripts potentially going forward for publication in G3, they can be more tightly linked. For instance, one the papers could provide the benchmark data that is required for this manuscript.

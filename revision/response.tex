@@ -1,0 +1,168 @@
+\documentclass[11pt]{article} 
+\usepackage[letterpaper, headheight=100pt]{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=2.5cm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{xspace}
+\newcommand{\eg}{\emph{e.g.}\xspace}
+\newcommand{\ie}{\emph{i.e.}\xspace}
+%\newcommand{\WV}[2]{\textcolor{red}{#1}\footnote{\textcolor{red}{#2}}}
+\newcommand{\WV}[2]{\textcolor{red}{#1\footnote{\textcolor{red}{#2}}}}
+\newcommand{\RC}[2]{\textcolor{purple}{#1\footnote{\textcolor{purple}{#2}}}}
+\newcommand{\reply}{\ensuremath{\hookrightarrow}\xspace}
+
+% Bibliography
+\usepackage{natbib} \bibpunct{(}{)}{;}{author-year}{}{,}
+\bibliographystyle{genetics}
+%\addto{\captionsenglish}{\renewcommand{\refname}{Literature Cited}}
+\setlength{\bibsep}{0.0pt}
+
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\newcommand{\alert}[1]{\textcolor{red}{#1}}
+\usepackage[left,running,mathlines]{lineno}
+\renewcommand\linenumberfont{\color{gray}\normalfont\tiny\sffamily}
+\usepackage{listings}
+
+\newcommand{\auassign}[2]{\mbox{}\marginpar{\footnotesize\textbf{#1}\newline \textcolor{red}{#2}}}
+
+\lhead{Manuscript ID\\G3/2018/200195 }
+\chead{\bfseries Response to Reviewer Comments}
+\rhead{\today\\William Valdar}
+\title{BVH: Response To Editors/Reviewers}
+
+
+\newcounter{ReviewerNum}
+\setcounter{ReviewerNum}{1}
+
+\newcounter{QuestionNum}[ReviewerNum]
+\setcounter{QuestionNum}{0}
+
+\newcounter{EditorNum}
+\setcounter{EditorNum}{1}
+
+\newcounter{EdQuestionNum}[EditorNum]
+\setcounter{EdQuestionNum}{0}
+
+\newcommand{\ReviewerQuestion}[1]{
+  \vspace{5pt}\goodbreak
+%  \refstepcounter{QuestionNum}
+  \noindent\fbox{Reviewer:} #1
+  \normalfont\par
+}
+
+\newcommand{\EditorQuestion}[1]{
+  \vspace{5pt}\goodbreak
+%  \refstepcounter{QuestionNum}
+  \noindent\fbox{Editor:} #1
+  \normalfont\par
+}
+
+
+\newcommand{\Response}[1]{\textcolor{blue}{#1}}
+
+\begin{document}
+\reversemarginpar
+
+\section*{Editor Comments}
+
+\subsection*{Multi-manuscript Issues (identical across responses to reviewers)}
+
+\EditorQuestion{
+  Now that you have all three manuscripts potentially going forward for publication in G3, they can be more tightly linked.
+}
+\Response{
+  We have updated the manuscripts such that each one refers to the other two in the introduction and discussion.
+}
+
+\EditorQuestion{
+   For instance, one the papers could provide the benchmark data that is required for [the software] manuscript.
+   So the software paper can include those files and refer to the other manuscript for details.
+}
+\Response{
+  We have incorporated this recommendation [which experiment?].
+  It is described in the ``benchmarks'' section of the software paper and the relevant files are included in its Zenodo repository.
+  (They are also in the Zenodo repository of the reanalysis paper.)
+}
+
+
+
+\subsection*{Issues Specific to this Manuscript}
+
+\EditorQuestion{
+  The main point to be addressed is the inclusion of a benchmark study demonstrating how the software scale (computational time and memory usage) with the number of SNP and sample size. But there are also many other comments that are useful and need to be addressed.
+}
+
+\EditorQuestion{
+  As suggested by Reviewer 1 it will be very useful to have a benchmark study with times/memory requirements as a function of number of markers and sample size.
+  This study will give those interested on using the package an understanding of how this package would scale.
+  It will be important to include in the discussion also elements related to scalability: is the package suitable for very large-p/large-n? 
+}
+\Response{
+  temp
+}
+
+
+
+\EditorQuestion{
+  There is a very rich literature in the study of genetic control in environmental variance in both plant and animal breeding as well as model organisms.
+  This literature should be mentioned. This comment may also apply to some of the companion papers.
+}
+
+% Mulder HA, Bijma P, Hill WG. Selection for Uniformity in Livestock by Exploiting Genetic Heterogeneity of Residual Variance. Genet Sel Evol. 2008;40:37-59. 
+
+% Hill WG, Zhang XS. Effects on Phenotypic Variability of Directional Selection Arising Through Genetic Differences in Residual Variability. Genet Res (Camb). 2004;83:121-132. 
+
+
+% Yang Y, Schön CC, Sorensen D. The genetics of environmental variation for dry matter grain yield in maize. Genet Res (Camb). 2012;94:113-119. 
+
+% Ibáñez N, Moreno A, Nieto B, Piqueras P, Salgado C, Gutierrez JP. Genetic Parameters Related to Environmental Variability of Weight of Mice; Signs of Correlated Canalised Response. Genet Sel Evol. 2008;40:279-293. 
+
+% Ibáñez N, Varona L, Sorensen D, Noguera JL. A study of heterogeneity of environmental variance for slaughter weight in pigs. Animal. 2007;2:19-26. 
+
+% Sørensen P, de los Campos G, Morgante F, Mackay TFC, Sorensen D. Genetic Control of Environmental Variation of Two Quantitative Traits of Drosophila melanogaster Revealed by Whole-Genome Sequencing. Genetics. 2015;201(2):487-497. doi:10.1534/genetics.115.180273. 
+
+\section*{Response to Reviewer 1 comment}
+
+\ReviewerQuestion{
+  The authors mention "in almost all traits of interest in human health and disease".
+  The detection of QTL has also been widely used in plant and animal populations.
+}
+
+\Response{True.}
+
+\ReviewerQuestion{
+  The authors used a set of simulated data with 3 chromosomes and 11 equally spaced markers.
+  I would like to see an example with a larger genotype data set.
+}
+
+\Response{Fair.}
+
+\ReviewerQuestion{
+  In the simulation, the authors should indicate the magnitude of the genetic variance explained by the QTL.
+}
+\Response{It's in there.}
+
+\ReviewerQuestion{
+  The CPU time is indicated for the data set of the example.
+  I would like to have the CPU time information in a more realistic data set.
+  Perhaps authors can use a free data set from the web.
+}
+
+\Response{addressed in Editor comment.}
+
+\ReviewerQuestion{
+  I think the authors should also indicate if the software is capable in terms of computing power to analyze the data from SNP genotyping devices or even sequencing.
+}
+
+\Response{Permutation probably not.  Could do Efron trick.}
+
+
+\end{document}
+
