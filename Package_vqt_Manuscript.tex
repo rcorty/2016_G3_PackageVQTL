@@ -106,9 +106,11 @@ To illustrate the use of the \texttt{vqtl} package, we first simulated an exampl
 This cross consisted of 200 male and 200 female F2 offspring, with 3 chromosomes of length 100 cM, each tagged by 11 equally-spaced markers and estimated genotype probabilities at 2cM intervals with \texttt{R/qtl}'s hidden Markov model. We then generated four phenotypes:
 \begin{enumerate}
 	\item \texttt{phenotype1} consists only of random noise and will serve as an example of negative results for all tests.
-	\item \texttt{phenotype2} has an mQTL at the center of chromosome one.
+	\item \texttt{phenotype2} has an mQTL that explains 4\% of phenotype variance at the center of chromosome one.
 	\item \texttt{phenotype3} has a vQTL at the center of chromosome two.
+        This vQTL acts additively on the log standard deviation scale, and results in residual standard deviation of [0.8, 1, 1.25] for the three genotype groups.
 	\item \texttt{phenotype4} has an mvQTL at the center of chromosome three.
+        This mvQTL has a mean effect that explains 2.7\% of phenotype variance and a variance effect that acts additively on the standard deviation scale, resulting in residual standard deviation of [0.85, 1, 1.17] for the three genotype groups.
 \end{enumerate}
 
 We additionally consider \texttt{phenotype1x} through \texttt{phenotype4x}, which have the same type of genetic effects as \texttt{phenotype1} through \texttt{phenotype4}, but have the additional feature that females have greater residual variance than males.
