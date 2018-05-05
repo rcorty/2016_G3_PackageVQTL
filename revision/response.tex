@@ -90,8 +90,7 @@
 }
 \Response{
   We have incorporated this recommendation, using the dataset from Kumar et al. 2013 that was used in one of the case studies in the manuscript titled ``Mean-Variance QTL Mapping Identifies Novel QTL for Circadian Activity and Exploratory Behavior in Mice''.
-  The time required to analyze this dataset, according to number of computer cores available and number of permutations desired, is described in the ``benchmarks'' section of the software paper and the relevant files are included in its Zenodo repository.
-  (These files are now in two places, since they are also in the Zenodo repository of the reanalysis paper.)
+  The time required to analyze this dataset, according to number of computer cores available and number of permutations desired, is described in the ``Performance Benchmarks'' section of the software paper and the relevant files are included in its Zenodo repository.
 }
 
 
@@ -115,7 +114,9 @@
   [Citation recommendations provided by the editor.]
 }
 \Response{
-  We have added a section in the introduction that describes how projects in plant and animal breeding seeking to modulate environmental variance are related to the work presented here.
+  The editor suggested references that relate to the heritabiliyty of environmental variance.
+  This literature was foundational toward the development of the work presented in this manuscript, so we agree with the editor that it should be cited in the introduction.
+  We have added a paragraph to the introduction that describes how recognizing the heritability of environmental variance is a necessary step toward vQTL and mvQTL mapping.
 }
 
 % Mulder HA, Bijma P, Hill WG. Selection for Uniformity in Livestock by Exploiting Genetic Heterogeneity of Residual Variance. Genet Sel Evol. 2008;40:37-59. 
@@ -145,12 +146,11 @@
   I would like to see an example with a larger genotype data set.
 }
 \Response{
-  In order to most clearly illustrate the standard workflow associated with package \texttt{vqtl}, the authors have demonstrated its usage on a an unrealistically-small genome.
+  To most clearly illustrate the standard workflow associated with package \texttt{vqtl}, the authors have demonstrated its usage on a simulated cross with an unrealistically-small genome.
   The authors are encouraged by the reviewer's enthusiasm to see the package applied to real datasets.
-  This manuscript has been submitted as part of a three-paper companionship, where (call this one paper one), paper two contains two real-data reanalyses and paper three contains one real-data reanalysis.
-  Thus, the authors contend it is appropriate to maintain this paper having only limited mention of real data, those mentions in the ``Performance Benchmarks'' section.
+  This manuscript has been submitted as part of a three-paper companionship, where each of the other papers contains an analysis of real data using package \texttt{vqtl}.
+  Thus, the authors contend it is appropriate to maintain this paper with only limited reference to real data --- a real dataset is used in in the first performance benchmark, as described below.
 }
-
 
 
 \ReviewerQuestion{
@@ -160,12 +160,14 @@
 }
 \Response{
   Thank you for this recommendation.
-  The authors agree that including this information will make the paper more useful to geneticists who are considering using the package -- we have added two sets of benchmarks.
+  The authors agree that including this information will make the paper more useful to geneticists who are considering using the package --- we have added two sets of benchmarks.
 }
 \Response{
   First, we demonstrate the performance of the package according to number of computer cores used and number of permutations conducted.
-  For this set of benchmarks, we used the intercross from Kumar et. al 2013 which we reanalyzed in \CortyReanalysisPaper, which involved 244 mice, 93 markers, and after using a hidden Markov model to estimate genotype probabilities at locations between markers, 582 loci.
-  As recommended by the editor, this example helps tie together the companions, because the results of this analysis are presented in a companion manuscript.
+  For this set of benchmarks, we used the intercross from Kumar et. al 2013 which we reanalyzed in \CortyReanalysisPaper.
+  This intercross population has 244 mice and was genotyped at 93 markers.
+  After applying the hidden Markov model in \texttt{R/qtl} with \texttt{step.size} of 2, the number of loci to be tested was 582.
+  As recommended by the editor, this example helps tie together the companions, because the results of this analysis are presented in the manuscript titled ``Mean-Variance QTL Mapping Identifies Novel QTL for Circadian Activity and Exploratory Behavior in Mice''.
   This addition can be found on page 4.
 }
 \Response{
@@ -189,7 +191,8 @@
 
 \Response{
   Thank you for this recommendation.
-  We have addressed this question in the discussion section, on page 4.
+  In short, the workflow presented here, which relies on permutation to assess statistical significance, would not be practical with a dense genotyping array with $\textgreater$ 10,000 markers, such as the MegaMUGA ($\approx$ 78,000 markers) GigaMuga ($\approx$ 150,000 markers), or the Mouse Diversity Genotyping array ($\approx$ 623,000 markers).
+  We have addressed this question in the ``Performance Benchmarks'' section, starting on page 4 and continuing onto page 5.
 }
 
 

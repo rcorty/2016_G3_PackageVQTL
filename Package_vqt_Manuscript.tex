@@ -63,7 +63,10 @@ Because it is inter-operable with the popular \texttt{qtl} package and uses many
 QTL mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health, as well as livestock and crop improvement programs.
 Advances in model organism genotyping \citep{Williams1990} and phenotyping \citep{Yang2014a} as well as in statistical methods \citep{Lander1989a,Martinez1992} and software tools (\eg, \citealt{Broman2003,Mulligan2017}) have supported these discoveries.
 
-Traditional analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for each every individual in the mapping population.
+It has long been recognized that the extent of residual variation is itself a heritable trait \citep{Lynch1998}.
+This phenomenon has been described theoretically \citep{Hill2010,Hill2004-uo} and demonstrated in inbred model organisms \citep{Sorensen2015} and crops \citep{Yang2012-aw} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
+
+However, traditional QTL mappinng analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for each every individual in the mapping population.
 Recent work, however, has challenged the assumption of homogeneous variance and sought to identify an additional type of QTL --- those that
 %, by driving heterogeneity of epistatic or environmental variance, 
 influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
@@ -118,51 +121,6 @@ All the same analyses and plots that are shown for \texttt{phenotype1} through \
 
 \section*{Scan the Genome}
 
-\begin{figure}[t]
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype1.pdf}
-    \end{subfigure}
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype2.pdf}
-    \end{subfigure}
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype3.pdf}
-    \end{subfigure}
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype4.pdf}
-    \end{subfigure}
-    \caption{
-        For each of the four simulated phenotypes, the genome scan shows the LOD score of each test --- mQTL, vQTL, and mvQTL --- in blue, red, and black, respectively.
-        The traditional test is in green and globally similar to the mQTL test.
-    }
-    \label{fig:lod_score_scans}
-\end{figure}
-
-\begin{figure}[t]
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype1.pdf}
-    \end{subfigure}
-
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype2.pdf}
-    \end{subfigure}
-
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype3.pdf}
-    \end{subfigure}
-
-    \begin{subfigure}[b]{\linewidth}
-        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype4.pdf}
-    \end{subfigure}
-
-    \caption{
-        For each of the four simulated phenotypes, the genome scan shows the -log10 of the FWER-corrected $p$-value for each test --- mQTL, vQTL, and mvQTL --- in blue, red, and black, respectively.
-        The traditional test is in green and globally similar to the mQTL test.
-        A value of 2 implies that the quantity of evidence against the null is such that we expect to see this much or more evidence once per hundred phenotypes no QTL.
-    }
-    \label{fig:empir_p_scans}
-\end{figure}
-
 The central function for genetic mapping in package \texttt{R/qtl} is \texttt{scanone} \citep{Broman2003}.
 Analogously, the central function for mean-variance QTL mapping in package \texttt{vqtl} is \texttt{scanonevar}, building on an early version of \texttt{scanonevar} in package \texttt{qtl}.
 It takes three required inputs:
@@ -194,39 +152,67 @@ with a null model that omits specific terms: for the mQTL test, the null model o
 \subsection{LOD scores and nominal p-values}
 
 \begin{figure}[t]
-    \begin{subfigure}[t]{0.5\linewidth}
-        \includegraphics[width=\textwidth]{images/mean_var_plot_phen1.pdf}
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype1.pdf}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.5\linewidth}
-        \includegraphics[width=\textwidth]{images/mean_var_plot_phen2.pdf}
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype2.pdf}
+    \end{subfigure}
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype3.pdf}
+    \end{subfigure}
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/LOD_scan_phenotype4.pdf}
+    \end{subfigure}
+    \caption{
+        For each of the four simulated phenotypes, the genome scan shows the LOD score of each test --- mQTL, vQTL, and mvQTL --- in blue, red, and black, respectively.
+        The traditional test is in green and globally similar to the mQTL test.
+    }
+    \label{fig:lod_score_scans}
+\end{figure}
+
+Each type of test (mQTL, vQTL, and mvQTL) yields two association statistics: the LOD score, and the (nominal) $p$-value.
+The LOD is a raw measure of association equal to the base 10 logarithm of the likelihood ratio (LR) between the fitted alternative and null models.
+Higher values indicate greater association when considered across loci for the same type of test; but LOD scores between different types of tests, namely between mvQTL test vs either mQTL or vQTL tests, are not readily comparable.
+The $p$-value, which is comparable between different types of tests, transforms the LOD score to take account of the number of parameters being fit: it is calculated from the asymptotic distribution of $2\log_e\left(\text{LR}\right)$ under the null model, namely the $\chi^2$ distribution with degrees of freedom equal to the difference in the number of parameters between the alternative and null models.
+% With this example dataset, it takes five seconds to run one genome scan on a Intel Core i5.
+
+The $p$-values described above, however, are nominal: they do not take into account multiple testing across the genome.
+\RC{
+    They also rely on asymptotic theory that assumes the underlying phenotype being residually normal; this may not always be the case and when violated will lead to inflated significance.
+}{
+    Could change this to read ``They also rely on the alternative model being exactly true; severe model misspecification is severe this can lead to inflated statistics.''
+    Would be more accurate, but I don't know the rules with regards to things the reviewer didn't mention.
+}
+
+More robust $p$-values that are corrected for genomewide significance via control of the family-wise error rate (FWER) can be obtained empirically, through a permutation procedure described below.
+
+\subsection{Robust, genomewide-adjusted p-values}
+
+\begin{figure}[t]
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype1.pdf}
     \end{subfigure}
 
-    \begin{subfigure}[t]{0.5\linewidth}
-        \includegraphics[width=\textwidth]{images/mean_var_plot_phen3.pdf}
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype2.pdf}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.5\linewidth}
-        \includegraphics[width=\textwidth]{images/mean_var_plot_phen4.pdf}
+
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype3.pdf}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{\linewidth}
+        \includegraphics[width=\textwidth]{images/empir_p_scan_phenotype4.pdf}
     \end{subfigure}
 
     \caption{
-        \texttt{mean\_var\_plot}s show the estimated genotype effects at a locus with mean effects on the horizontal axis and variance effects on the vertical axis.
-        Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.
-        For \texttt{phenotype1}, the pattern of overlapping estimates and standard errors is consistent with the fact that there are no genetic effects, and the $p$-value was not statistically significant at any locus.
-        For \texttt{phenotype2}, the pattern of horizontal, but not vertical, separation visually illustrates the identified mQTL.
-        For \texttt{phenotype3}, the pattern of vertical, but not horizontal, separation visually illustrates the identified vQTL.
-        For \texttt{phenotype4}, the pattern of two-dimensional separation illustrates an mvQTL.
-        \label{fig:mean_var_plots}
+        For each of the four simulated phenotypes, the genome scan shows the -log10 of the FWER-corrected $p$-value for each test --- mQTL, vQTL, and mvQTL --- in blue, red, and black, respectively.
+        The traditional test is in green and globally similar to the mQTL test.
+        A value of 2 implies that the quantity of evidence against the null is such that we expect to see this much or more evidence once per hundred phenotypes no QTL.
     }
+    \label{fig:empir_p_scans}
 \end{figure}
-
-
-Each type of test (mQTL, vQTL, and mvQTL) yields two association statistics: the LOD score, and the (nominal) $p$-value.The LOD is a raw measure of association equal to the base 10 logarithm of the likelihood ratio (LR) between the fitted alternative and null models. Higher values indicate greater association when considered across loci for the same type of test; but LOD scores between different types of tests, namely between mvQTL test vs either mQTL or vQTL tests, are not readily comparable. The $p$-value, which is comparable between different types of tests, transforms the LOD score to take account of the number of parameters being fit: it is calculated from the asymptotic distribution of $2\log_e\left(\text{LR}\right)$ under the null model, namely the $\chi^2$ distribution with degrees of freedom equal to the difference in the number of parameters between the alternative and null models. With this example dataset, it takes five seconds to run one genome scan on a Intel Core i5.
-
-The $p$-values described above, however, are nominal: they do not take into account multiple testing across the genome. They also rely on asymptotic theory that assumes the underlying phenotype being residually normal; this may not always be the case and when violated will lead to inflated significance. More robust $p$-values that are corrected for genomewide significance via control of the family-wise error rate (FWER) can be obtained empirically, through a permutation procedure described below.
-
-\subsection{Robust, genomewide-adjusted p-values}
 
 To calculate the empirical, FWER-controlled $p$-value of each test at each locus we advocate use of a permutation procedure [\CortyMethodsPaper].
 Like previous work on permutation-based thresholds for genetic mapping \citep{Churchill1994,Carlborg2002}, this procedure sidesteps the need to explicitly estimate the effective number of tests.
@@ -316,15 +302,32 @@ Calling \texttt{summary} on the output of \texttt{scanonevar} produces a summary
 \section*{Communicate Significant Findings}
 
 \begin{figure}[t]
-    \includegraphics[width = \linewidth]{images/benchmark_kumar.pdf}
-    \caption{
-        Time taken to run \texttt{scanonevar.perm} on the data from \citet{Kumar2013} which contains 244 individuals and 582 loci, varying the number of permutations desired and the number of computer cores used.
-        For a given number of cores, there is a linear relationship between number of permutations conducted and time required.
-        The slope the the line indicates time required per permutation and is dependent on the number of cores, ranging from $\approx$ 6.3 seconds per permutation with 4 cores to $\approx$ 1.2 second per permutation with 32 cores.
-    }
-    \label{fig:benchmark_kumar}
-\end{figure}
+    \begin{subfigure}[t]{0.5\linewidth}
+        \includegraphics[width=\textwidth]{images/mean_var_plot_phen1.pdf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.5\linewidth}
+        \includegraphics[width=\textwidth]{images/mean_var_plot_phen2.pdf}
+    \end{subfigure}
 
+    \begin{subfigure}[t]{0.5\linewidth}
+        \includegraphics[width=\textwidth]{images/mean_var_plot_phen3.pdf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.5\linewidth}
+        \includegraphics[width=\textwidth]{images/mean_var_plot_phen4.pdf}
+    \end{subfigure}
+
+    \caption{
+        \texttt{mean\_var\_plot}s show the estimated genotype effects at a locus with mean effects on the horizontal axis and variance effects on the vertical axis.
+        Horizontal lines indicate standard errors for mean effects and vertical lines indicate standard errors for variance effects.
+        For \texttt{phenotype1}, the pattern of overlapping estimates and standard errors is consistent with the fact that there are no genetic effects, and the $p$-value was not statistically significant at any locus.
+        For \texttt{phenotype2}, the pattern of horizontal, but not vertical, separation visually illustrates the identified mQTL.
+        For \texttt{phenotype3}, the pattern of vertical, but not horizontal, separation visually illustrates the identified vQTL.
+        For \texttt{phenotype4}, the pattern of two-dimensional separation illustrates an mvQTL.
+        \label{fig:mean_var_plots}
+    }
+\end{figure}
 
 Having identified interesting QTL, we want to visualize the their estimated genetic and covariate effects.
 Because the \texttt{vqtl} package models effects for both mean and variance, existing plotting utilities are not able to display the entirety of the modeling results.
@@ -348,17 +351,6 @@ Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} 
 
 \section{Establish a Confidence Interval for the QTL}
 
-
-\begin{figure}[t]
-    \includegraphics[width = \linewidth]{images/benchmark_sim_cross.pdf}
-    \caption{
-        Time taken to run 1000 permutation scans on 32 cores on simulated data using \texttt{scanonevar.perm}, varying the number of individuals in the mapping population and the number of markers in the genome.
-        For a given population size, there is a slightly supra-linear relationship between number of markers and time required.
-        The average slope of the line indicates the average time required per locus and is dependent on the population size, ranging from $\approx$ 1.4 seconds per locus with a population of size 100 to $\approx$ 3.3 seconds per locus with a population of size 800.
-    }
-    \label{fig:benchmark_sim_cross}
-\end{figure}
-
 Last, it is important to assess the genetic precision of a discovered QTL for bioinformatic follow-up.
 The function \texttt{scanonevar.boot} implements the non-parametric bootstrap \citep{Visscher1996}.
 This function takes, as arguments, a \texttt{scanonevar} object, the type of QTL detected, the name of the chromosome containing the QTL, and \texttt{num.resamples}, the number of bootstrap resamplings desired.
@@ -378,6 +370,27 @@ With the datasets simulated here, it takes 20 minutes to run 1000 bootstrap resa
 
 \section*{Performance Benchmarks}
 
+
+\begin{figure}[t]
+    \includegraphics[width = \linewidth]{images/benchmark_kumar.pdf}
+    \caption{
+        Time taken to run \texttt{scanonevar.perm} on the data from \citet{Kumar2013} which contains 244 individuals and 582 loci, varying the number of permutations desired and the number of computer cores used.
+        For a given number of cores, there is a linear relationship between number of permutations conducted and time required.
+        The slope the the line indicates time required per permutation and is dependent on the number of cores, ranging from $\approx$ 6.3 seconds per permutation with 4 cores to $\approx$ 1.2 second per permutation with 32 cores.
+    }
+    \label{fig:benchmark_kumar}
+\end{figure}
+
+\begin{figure}[t]
+    \includegraphics[width = \linewidth]{images/benchmark_sim_cross.pdf}
+    \caption{
+        Time taken to run 1000 permutation scans on 32 cores on simulated data using \texttt{scanonevar.perm}, varying the number of individuals in the mapping population and the number of markers in the genome.
+        For a given population size, there is a slightly supra-linear relationship between number of markers and time required.
+        The average slope of the line indicates the average time required per locus and is dependent on the population size, ranging from $\approx$ 1.4 seconds per locus with a population of size 100 to $\approx$ 3.3 seconds per locus with a population of size 800.
+    }
+    \label{fig:benchmark_sim_cross}
+\end{figure}
+
 By far, the most computationally-intensive step in the mean-variance QTL mapping process is the assessment of genome-wide statistical significance by permutation.
 The original genome scan is much faster, because it involves only a single scan, and the bootstrap is much faster because it involves only a single chromosome.
 
@@ -388,6 +401,12 @@ The slope the the line indicates time required per permutation and is dependent 
 For the second benchmark, we ran \texttt{scanonevar.perm} on simulated data, always conducting 1000 permutations and using 32 cores, but varying the number of individuals in the mapping population and the number of markers in the genome.
 For a given population size, there is a slightly supra-linear relationship between number of markers and time required \autoref{fig:benchmark_sim_cross}, which reflects a linear increase in the time taken to conduct the permuted genome scans, plus an increase in the time taken for ``bookkeeping'' tasks like organizing and reshaping genetic data.
 The slope of the line indicates the time required per locus and is dependent on the population size, ranging from $\approx$ 1.4 seconds per locus with a population of size 100 to $\approx$ 3.3 seconds per locus with a population of size 800.
+
+Based on these benchmarks, it is clear that the workflow presented here is practical for QTL mapping F2 intercross and similar populations on modern, multi-core scientific computers.
+Populations with many recombinations, where dense genotyping arrays that interrogate $\textgreater$ 10,000 loci are relevant, could not be practically analyzed with package \texttt{vqtl} in this way.
+However, both statistical and computational steps could be taken to make such a study feasible.
+Statistically, techniques could be used that allow for large-scale analysis without permutation testing \citep{Efron2004}.
+Computationally, the software could be changed to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
 
 % Performance benchmarks of package \texttt{vqtl} are presented in \autoref{fig:benchmark_kumar} and \autoref{fig:benchmark_sim_cross}.
 
