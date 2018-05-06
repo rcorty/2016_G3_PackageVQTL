@@ -63,8 +63,8 @@ Because it is inter-operable with the popular \texttt{qtl} package and uses many
 QTL mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health, as well as livestock and crop improvement programs.
 Advances in model organism genotyping \citep{Williams1990} and phenotyping \citep{Yang2014a} as well as in statistical methods \citep{Lander1989a,Martinez1992} and software tools (\eg, \citealt{Broman2003,Mulligan2017}) have supported these discoveries.
 
-It has long been recognized that the extent of residual variation is itself a heritable trait \citep{Lynch1998}.
-This phenomenon has been described theoretically \citep{Hill2010,Hill2004-uo} and demonstrated in inbred model organisms \citep{Sorensen2015} and crops \citep{Yang2012-aw} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
+It has long been recognized that the extent of residual variation is itself a heritable trait \citep{Falconer1965,Lynch1998}.
+This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010} and demonstrated in inbred model organisms \citep{Sorensen2015,Ayroles2015} and crops \citep{Yang2012-aw,Forsberg2015} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
 
 However, traditional QTL mappinng analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for each every individual in the mapping population.
 Recent work, however, has challenged the assumption of homogeneous variance and sought to identify an additional type of QTL --- those that
@@ -85,6 +85,11 @@ On each phenotype we then conduct a genome scan using standard approximations to
 The association statistics of all four tests are then initially plotted in LOD score units, with drawbacks of this plotting unit discussed.
 Permutation scans are used to determine empirically adjusted $p$-values, and plotting in these units is shown to to make the results of the four tests more comparable.
 Last, we describe plots to communicate the effects that led to the detection of a QTL, and use the bootstrap to estimate its confidence interval.
+
+In two companion articles, we apply mean-variance QTL mapping with package \texttt{vqtl} to discover new QTL.
+In the first, we describe a novel vQTL for exploratory behavior and a novel mQTL for a circadian behavior trait, both in mouse F2 intercrosses retrieved from the Mouse Phenome Database (\CortyReanalysisPaper) \citep{Bogue2015}.
+The dataset from one of these intercrosses is used to benchmark the performance of package \texttt{vqtl}, as is described in the ``Performance Benchmarks'' section.
+In the second, we describe a unique strength of mean-variance QTL mapping, its ability to accommodate variance heterogeneity arising from background factors, such as sex, batch, and housing, and demonstrate the value of such accommodation with both simulation studies and a report of a novel QTL (\CortyMethodsPaper).
 
 % Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the residual variance of the trait.
 
@@ -449,8 +454,8 @@ Computationally, the software could be changed to run on a computer cluster, rat
 
 We have demonstrated typical usage of the \texttt{R} package \texttt{vqtl} for mean-variance QTL mapping in an F2 intercross.
 This package is appropriate for crosses and phenotypes where genetic factors or covariates or are known or suspected to influence phenotype variance.
-In the case of genetic factors, they can be mapped, as illustrated in \CortyReanalysisPaper.
-In the case of covariates, they can be accommodated, which can increase power and improve false positive rate control, as described in \CortyMethodsPaper.
+In the case of genetic factors, they can be mapped, as illustrated in one companion article (\CortyReanalysisPaper).
+In the case of covariates, they can be accommodated, which can increase power and improve false positive rate control, as illustrated in another companion article (\CortyMethodsPaper).
 
 \section*{Resources}
 The scripts used to simulate genotypes and phenotypes, conduct the genome scans, and plot the results are available as a public, static Zenodo repository at \url{DOI: 10.5281/zenodo.1173799}.
