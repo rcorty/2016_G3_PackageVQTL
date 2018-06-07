@@ -409,9 +409,9 @@ The slope of the line indicates the time required per locus and is dependent on 
 
 Based on these benchmarks, it is clear that the workflow presented here is practical for QTL mapping F2 intercross and similar populations on modern, multi-core scientific computers.
 Populations with many recombinations, where dense genotyping arrays that interrogate $\textgreater$ 10,000 loci are relevant, could not be practically analyzed with package \texttt{vqtl} in this way.
-However, both statistical and computational steps could be taken to make such a study feasible.
+\WV{However, both statistical and computational steps could be taken to make such a study feasible.}{Are there ways to make efficient the analysis of multiple traits on the same population? For example, in the standard analysis of gene expression data, rint-ing a probe then performing permutations on it provides thresholds that will be valid for all other rint-ed probes (assuming no missingness; eg, ask Greg). Not sure if this applies in our situation... needs more thought.}
 Statistically, techniques could be used that allow for large-scale analysis without permutation testing \citep{Efron2004}.
-Computationally, the software could be changed to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
+Computationally, the software could be changed to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.\WV{}{Does this section extend the paper beyond the required limits.}
 
 % Performance benchmarks of package \texttt{vqtl} are presented in \autoref{fig:benchmark_kumar} and \autoref{fig:benchmark_sim_cross}.
 
