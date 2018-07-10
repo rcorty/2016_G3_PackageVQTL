@@ -37,8 +37,8 @@
 
 \newcommand{\auassign}[2]{\mbox{}\marginpar{\footnotesize\textbf{#1}\newline \textcolor{red}{#2}}}
 
-\lhead{Manuscript ID\\G3/2018/200159}
-\chead{\bfseries Response to Reviewer Comments}
+\lhead{Manuscript ID: G3/2018/200159 \\ Title: ``\texttt{vqtl}: An \texttt{R} package for Mean-Variance QTL Mapping''}
+\chead{\bfseries Response to Reviewer Comments \\ \mbox{}\\ }
 \rhead{\today\\William Valdar}
 \title{BVH: Response To Editors/Reviewers}
 
@@ -103,8 +103,9 @@
   It will be important to include in the discussion also elements related to scalability: is the package suitable for very large-p/large-n? 
 }
 \Response{
-  We have added this information in the ``Performance Benchmarks'' section.
-  See detailed response to Reviewer 1 comment 3.
+  We have added this information in the ``Performance Benchmarks'' section. 
+  See detailed response to Reviewer 1 comment 3. 
+  Note that this has lengthened the paper somewhat, but we can move plots to supplemental if that would be preferred.
 }
 
 
@@ -163,8 +164,8 @@
   The authors agree that including this information will make the paper more useful to geneticists who are considering using the package --- we have added two sets of benchmarks.
 }
 \Response{
-  First, we demonstrate the performance of the package according to number of computer cores used and number of permutations conducted.
-  For this set of benchmarks, we used the intercross from Kumar et. al 2013 which we reanalyzed in \CortyReanalysisPaper.
+  First, we demonstrate the performance of the package according to the number of computer cores used and the number of permutations conducted.
+  For this set of benchmarks, we used the intercross from Kumar et. al 2013, which we reanalyzed in \CortyReanalysisPaper.
   This intercross population has 244 mice and was genotyped at 93 markers.
   After applying the hidden Markov model in \texttt{R/qtl} with \texttt{step.size} of 2, the number of loci to be tested was 582.
   As recommended by the editor, this example helps tie together the companions, because the results of this analysis are presented in the manuscript titled ``Mean-Variance QTL Mapping Identifies Novel QTL for Circadian Activity and Exploratory Behavior in Mice''.

@@ -9,12 +9,15 @@
 
 \title{\texttt{vqtl}: An \texttt{R} package for Mean-Variance QTL Mapping}
 
-\author[$\ast$,1]{Robert W. Corty}
-\author[$\ast, 1$]{William Valdar}
+\author[$\ast,\dagger$]{Robert W. Corty}
+\author[$\ast,\ddagger,1$]{William Valdar}
 
-\affil[$\ast$]{University of North Carolina at Chapel Hill, Department of Genetics}
+\affil[$\ast$]{Department of Genetics}
+\affil[$\dagger$]{Bioinformatics and Computational Biology Curriculum}
+\affil[$\ddagger$]{and Lineberger Comprehensive Cancer Center, University of North Carolina,
+    Chapel Hill, NC}
 
-\keywords{QTL mapping, vQTL, mvQTL, variance heterogeneity, DGLM, R}
+\keywords{heteroskedastic regression, mvQTL, variance heterogeneity, DGLM}
 
 \runningtitle{Package vqtl} % For use in the footer 
 
@@ -60,57 +63,36 @@ Because it is inter-operable with the popular \texttt{qtl} package and uses many
 
 \section*{Introduction}
 
-QTL mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health, as well as livestock and crop improvement programs.
-Advances in model organism genotyping \citep{Williams1990} and phenotyping \citep{Yang2014a} as well as in statistical methods \citep{Lander1989a,Martinez1992} and software tools (\eg, \citealt{Broman2003,Mulligan2017}) have supported these discoveries.
+Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
+Recent work, however, has challenged the assumption of homogeneous residual variance and sought to identify an additional type of QTL---those that influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}. 
 
-It has long been recognized that the extent of residual variation is itself a heritable trait \citep{Falconer1965,Lynch1998}.
-This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010} and demonstrated in inbred model organisms \citep{Sorensen2015,Ayroles2015} and crops \citep{Yang2012-aw,Forsberg2015} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
+Although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Wei2016-lt,Wang2017,Wei2017-tt}, statistical tools for this purpose remain heterogeneous.
+We have developed a standardized method for QTL mapping in experimental crosses that simultanously model mean and variance effects in order to detect mQTL, vQTL and a generalization of the two that we term ``mvQTL''.
+Our approach, which we term ``mean-variance QTL mapping'', can currently be applied to F2 intercross and backcross designs.
+In two companion articles, we characterize this method and competitors in the setting where a background factor drives variance heterogeneity (\CortyMethodsPaper), and use it to discover new QTL from two existing data resources (\CortyReanalysisPaper).
 
-However, traditional QTL mappinng analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for each every individual in the mapping population.
-Recent work, however, has challenged the assumption of homogeneous variance and sought to identify an additional type of QTL --- those that
-%, by driving heterogeneity of epistatic or environmental variance, 
-influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}.
-
-Although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Wei2016-lt,Wang2017,Wei2017-tt}, the statistical methods used for this purpose remain heterogeneous.
-% and sometimes idiosyncratic, with connections to methods for mapping mean QTL often lacking or unclear.
-% a clear or intuitive connection to methods used for detecting mean QTL.
-%there remains great heterogeneity among the statistical methods used to conduct these analyses.
-We developed a standardized method for QTL mapping that can detect mQTL, vQTL, and a generalization of the two that we term ``mvQTL''.
-This approach, which we term ``mean-variance QTL mapping'', can be applied to intercross and backcross designs.
-In two companion articles, we characterize this method and competitors in the setting where a background factor drives variance heterogeneity (\CortyMethodsPaper), and use it to discover new QTL from two existing data resources (\CortyReanalysisPaper)
-
-Here, we provide a practical guide to using the \texttt{R} package \texttt{vqtl}, which implements mean-variance QTL mapping.
+Here, we provide a practical guide to the approach using its associated \texttt{R} package \texttt{vqtl}, which implements mean-variance QTL mapping and is inter-operable with the established \texttt{qtl} package \citep{Broman2003}.
 First, to generate illustrative data, we simulate an F2 intercross and four phenotypes: one phenotype determined entirely by random noise, and one with each of the three kinds of QTL.
 On each phenotype we then conduct a genome scan using standard approximations to interval mapping \citep{Lander1989a,Martinez1992}, and mean-variance QTL mapping, which includes a test for mQTL, a test for vQTL, and a test for mvQTL.
-The association statistics of all four tests are then initially plotted in LOD score units, with drawbacks of this plotting unit discussed.
-Permutation scans are used to determine empirically adjusted $p$-values, and plotting in these units is shown to to make the results of the four tests more comparable.
-Last, we describe plots to communicate the effects that led to the detection of a QTL, and use the bootstrap to estimate its confidence interval.
+The association statistics of all four tests are initially plotted in LOD score units, with drawbacks of this plotting unit discussed; then permutation scans are used to determine empirically-adjusted $p$-values, and plotting in these units is shown to to make the results of the four tests more easily comparable.
+Plots are then described that communicate effects that led to the QTL's detection, and the bootstrap is used to estimate its confidence interval.
+Last, we benchmark performance, using one of the datasets examined in \CortyReanalysisPaper to report how computation time varies with marker density and number of permutations.
 
-In two companion articles, we apply mean-variance QTL mapping with package \texttt{vqtl} to discover new QTL.
-In the first, we describe a novel vQTL for exploratory behavior and a novel mQTL for a circadian behavior trait, both in mouse F2 intercrosses retrieved from the Mouse Phenome Database (\CortyReanalysisPaper) \citep{Bogue2015}.
-The dataset from one of these intercrosses is used to benchmark the performance of package \texttt{vqtl}, as is described in the ``Performance Benchmarks'' section.
-In the second, we describe a unique strength of mean-variance QTL mapping, its ability to accommodate variance heterogeneity arising from background factors, such as sex, batch, and housing, and demonstrate the value of such accommodation with both simulation studies and a report of a novel QTL (\CortyMethodsPaper).
+%In two companion articles, we apply mean-variance QTL mapping with package \texttt{vqtl} to discover new QTL.
+%~In the first, we describe a novel vQTL for exploratory behavior and a novel mQTL for a circadian behavior trait, both in mouse F2 intercrosses retrieved from the Mouse Phenome Database (\CortyReanalysisPaper) \citep{Bogue2015}.
+%In the second, we describe a unique strength of mean-variance QTL mapping, its ability to accommodate variance heterogeneity arising from background factors, such as sex, batch, and housing, and demonstrate the value of such accommodation with both simulation studies and a report of a novel QTL (\CortyMethodsPaper).
 
-% Said another way, it is typically assumed that nothing -- neither environmental factors nor genetic factors -- influences the residual variance of the trait.
+% \section*{Old intro material -- TO DELETE OR REPURPOSE}
 
-% In fact, gene-gene interactions, gene-environment interactions, genetic factors that influence microenvironmental sensitivity, and environmental factors can influence residual variance.
+% Quantitative Trait Locus (QTL) mapping studies in experimental crosses have provided important insights on nearly every trait of interest in human health, as well as livestock and crop improvement programs.
+% Advances in model organism genotyping \citep{Williams1990} and phenotyping \citep{Yang2014a} as well as in statistical methods \citep{Lander1989a,Martinez1992} and software tools (\eg, \citealt{Broman2003,Mulligan2017}) have supported these discoveries.
 
-% This approach allows for QTL mapping in the presence of both genetic and non-genetic effects on phenotype mean and variance.
-% We compare its behavior to other QTL mapping approaches, and illustrate the discovery of a new QTL from an existing study.
-
-% overview of the software or resource
-% In support of other researchers who may be interested in mvQTL mapping, we created \texttt{R} package \texttt{vqtl}, which provides functions for conducting genome scans, assessing the statistical significance of results, and visualizing and interpreting significant findings.
-
-% describe how researchers can access it.
-% \texttt{R} package \texttt{vqtl} uses the same \texttt{cross} data structure as the popular \texttt{qtl} package and is available on \texttt{CRAN}, so it is easy to get started.
-% Here, we demonstrate typical use of the \texttt{vqtl} package to analyze four simulated traits and discover three QTL.
-% a QTL that influence phenotype mean (an mQTL), a QTL that influences phenotype variance (vQTL) and a QTL that influences a combination of mean and variance (an mvQTL).
-% The code used to simulate the phenotypes, calculate the statistics, estimate their significance, and visualize significant results is available at \texttt{github.com/rcorty}.
-
+% It has long been recognized that the extent of residual variation is itself a heritable trait \citep{Falconer1965,Lynch1998}.
+% This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010} and demonstrated in inbred model organisms \citep{Sorensen2015,Ayroles2015} and crops \citep{Yang2012-aw,Forsberg2015} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
 
 \section*{Example data: Simulated F2 Intercross}
 
-To illustrate the use of the \texttt{vqtl} package, we first simulated an example F2 intercross using the popular \texttt{R/qtl} package \citep{Broman2003}, on which \texttt{vqtl} is based.
+To illustrate the use of the \texttt{vqtl} package, we first simulated an example F2 intercross using \texttt{R/qtl} package \citep{Broman2003}, on which \texttt{vqtl} is based.
 This cross consisted of 200 male and 200 female F2 offspring, with 3 chromosomes of length 100 cM, each tagged by 11 equally-spaced markers and estimated genotype probabilities at 2cM intervals with \texttt{R/qtl}'s hidden Markov model. We then generated four phenotypes:
 \begin{enumerate}
 	\item \texttt{phenotype1} consists only of random noise and will serve as an example of negative results for all tests.
@@ -183,13 +165,7 @@ The $p$-value, which is comparable between different types of tests, transforms 
 % With this example dataset, it takes five seconds to run one genome scan on a Intel Core i5.
 
 The $p$-values described above, however, are nominal: they do not take into account multiple testing across the genome.
-\RC{
     They also rely on asymptotic theory that assumes the underlying phenotype being residually normal; this may not always be the case and when violated will lead to inflated significance.
-}{
-    Could change this to read ``They also rely on the alternative model being exactly true; severe model misspecification is severe this can lead to inflated statistics.''
-    Would be more accurate, but I don't know the rules with regards to things the reviewer didn't mention.
-}
-
 More robust $p$-values that are corrected for genomewide significance via control of the family-wise error rate (FWER) can be obtained empirically, through a permutation procedure described below.
 
 \subsection{Robust, genomewide-adjusted p-values}
@@ -356,8 +332,7 @@ Additional plotting utilities, \texttt{phenotype\_plot}, \texttt{effects\_plot} 
 
 \section{Establish a Confidence Interval for the QTL}
 
-Last, it is important to assess the genetic precision of a discovered QTL for bioinformatic follow-up.
-The function \texttt{scanonevar.boot} implements the non-parametric bootstrap \citep{Visscher1996}.
+Last, to assess the genetic precision of a discovered QTL for bioinformatic follow-up, the function \texttt{scanonevar.boot} estimates confidence intervals via the non-parametric bootstrap \citep{Visscher1996}.
 This function takes, as arguments, a \texttt{scanonevar} object, the type of QTL detected, the name of the chromosome containing the QTL, and \texttt{num.resamples}, the number of bootstrap resamplings desired.
 As with \texttt{scanonevar.perm}, the \texttt{n.cores} argument can be used to spread the bootstraps over many computational cores and defaults to the number of cores available minus two, and bootstraps can be run on separate computers and combined with \texttt{c} to increase the precision of the estimate of the confidence interval.
 
@@ -400,38 +375,16 @@ By far, the most computationally-intensive step in the mean-variance QTL mapping
 The original genome scan is much faster, because it involves only a single scan, and the bootstrap is much faster because it involves only a single chromosome.
 
 For the first benchmark, we ran \texttt{scanonevar.perm} on the data from \citet{Kumar2013} and \CortyReanalysisPaper, which contains 244 individuals and 582 loci, varying the number of permutations desired and the number of computer cores used.
-For a given number of cores, there is a linear relationship between number of permutations conducted and time required \autoref{fig:benchmark_kumar}.
-The slope the the line indicates time required per permutation and is dependent on the number of cores, ranging from $\approx$ 6.3 seconds per permutation with 4 cores to $\approx$ 1.2 second per permutation with 32 cores.
+For a given number of cores, the relationship between time and the number of permutations is linear (\autoref{fig:benchmark_kumar}), the slope depending on the number of cores and ranging from $\approx$ 6.3 seconds per permutation with 4 cores to $\approx$ 1.2 second per permutation with 32 cores.
 
 For the second benchmark, we ran \texttt{scanonevar.perm} on simulated data, always conducting 1000 permutations and using 32 cores, but varying the number of individuals in the mapping population and the number of markers in the genome.
-For a given population size, there is a slightly supra-linear relationship between number of markers and time required \autoref{fig:benchmark_sim_cross}, which reflects a linear increase in the time taken to conduct the permuted genome scans, plus an increase in the time taken for ``bookkeeping'' tasks like organizing and reshaping genetic data.
-The slope of the line indicates the time required per locus and is dependent on the population size, ranging from $\approx$ 1.4 seconds per locus with a population of size 100 to $\approx$ 3.3 seconds per locus with a population of size 800.
+For a given population size, there is a slightly curvilinear relationship between number of markers and time required (\autoref{fig:benchmark_sim_cross}), which reflects a linear increase in the time taken to conduct the permuted genome scans plus an increase in the time taken for ``bookkeeping'' tasks like organizing and reshaping genetic data.
+The slope (minutes per locus) depends on the population size, ranging from $\approx$ 1.4 seconds per locus with a population of size 100 to $\approx$ 3.3 seconds per locus with a population of size 800.
 
-Based on these benchmarks, it is clear that the workflow presented here is practical for QTL mapping F2 intercross and similar populations on modern, multi-core scientific computers.
-Populations with many recombinations, where dense genotyping arrays that interrogate $\textgreater$ 10,000 loci are relevant, could not be practically analyzed with package \texttt{vqtl} in this way.
-\RC
-{
-    \WV
-    {
-        However, both statistical and computational steps could be taken to make such a study feasible.
-    }{
-        Are there ways to make efficient the analysis of multiple traits on the same population? For example, in the standard analysis of gene expression data, rint-ing a probe then performing permutations on it provides thresholds that will be valid for all other rint-ed probes (assuming no missingness; eg, ask Greg). Not sure if this applies in our situation... needs more thought.
-    }
-}
-{
-    I think simply suggesting that larger-scale analysis might be possible is appropriate here, since we haven't done it and haven't even worked out how to do it.
-    I don't think it makes sense for us to try to figure out how we would have done a different study and report exactly how we would have done that.
-}
-Statistically, techniques could be used that allow for large-scale analysis without permutation testing \citep{Efron2004}.
-Computationally, the software could be changed to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
-\RC
-{
-    \WV{}
-    {Does this section extend the paper beyond the required limits.}
-}
-{
-    Yes.  Do you think they will notice/care?
-}
+Based on these benchmarks, the workflow presented here is practical for QTL mapping F2 intercross and similar populations on modern, multi-core scientific computers.
+Populations with many recombinations, where dense genotyping arrays that interrogate $\textgreater$ 10,000 loci, could not be practically analyzed with package \texttt{vqtl} in this way, although it is likely that statistical and computational steps could be taken to make such studies feasible:
+statistically, techniques could be used that allow for large-scale analysis without permutation testing \citep{Efron2004};
+computationally, the software could be changed to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
 
 % Performance benchmarks of package \texttt{vqtl} are presented in \autoref{fig:benchmark_kumar} and \autoref{fig:benchmark_sim_cross}.
 
@@ -487,7 +440,7 @@ The package \texttt{vqtl} and its documentation are freely available on \texttt{
 % The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling to assess the genetic precision of a QTL and extablish a confidence interval. 
 
 \section{Acknowledgments}
-This work was primarily funded by a National Institutes of General Medical Sciences (NIGMS) grant to WV (R01-GM104125) and a National Institutes of Mental Health grant to RWC (F30-MH108265).
+This work was primarily funded by National Institutes of General Medical Sciences (NIGMS) grants to WV (R01-GM104125,R35-GM127000) and a National Institutes of Mental Health grant to RWC (F30-MH108265).
 RWC received additional support from NIGMS grant T32-GM067553 and National Library of Medicine grant T32-LM012420.
 
 
