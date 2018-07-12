@@ -2,12 +2,69 @@
 %% http://bibdesk.sourceforge.net/
 
 
-%% Created for William Valdar at 2018-07-10 14:33:08 -0400 
+%% Created for William Valdar at 2018-07-12 10:59:42 -0400 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@article{Dumitrascu2018,
+	Author = {Dumitrascu, Bianca and Darnell, Gregory and Ayroles, Julien and Engelhardt, Barbara E},
+	Date-Added = {2018-07-12 14:58:15 +0000},
+	Date-Modified = {2018-07-12 14:59:39 +0000},
+	Doi = {10.1093/bioinformatics/bty565},
+	File = {:Users/wvaldar/Documents/MendeleyDesktop/2018/Dumitrascu et al/Dumitrascu et al. - Bioinformatics - Statistical tests for detecting variance effects in quantitative trait studies.pdf:pdf;:Users/wvaldar/Documents/MendeleyDesktop/2018/Dumitrascu et al/Dumitrascu et al. - Bioinformatics - Statistical tests for detecting variance effects in quantitative trait studies(2).pdf:pdf},
+	Journal = {Bioinformatics},
+	Mendeley-Groups = {vQTL},
+	Pages = {bty565},
+	Pmid = {29982387},
+	Title = {{Statistical tests for detecting variance effects in quantitative trait studies}},
+	Url = {http://dx.doi.org/10.1093/bioinformatics/bty565},
+	Year = {2018},
+	Bdsk-Url-1 = {http://dx.doi.org/10.1093/bioinformatics/bty565}}
+
+@article{Soave2017,
+	Abstract = {We generalize Levene's test for variance (scale) heterogeneity between k groups for more complex data, when there are sample correlation and group membership uncertainty. Following a two-stage regression framework, we show that least absolute deviation regression must be used in the stage 1 analysis to ensure a correct asymptotic $\chi$k-12/(k-1) distribution of the generalized scale (gS) test statistic. We then show that the proposed gS test is independent of the generalized location test, under the joint null hypothesis of no mean and no variance heterogeneity. Consequently, we generalize the recently proposed joint location-scale (gJLS) test, valuable in settings where there is an interaction effect but one interacting variable is not available. We evaluate the proposed method via an extensive simulation study and two genetic association application studies.},
+	Archiveprefix = {arXiv},
+	Arxivid = {1605.05715},
+	Author = {Soave, David and Sun, Lei},
+	Date-Added = {2018-07-12 14:58:15 +0000},
+	Date-Modified = {2018-07-12 14:58:15 +0000},
+	Doi = {10.1111/biom.12651},
+	Eprint = {1605.05715},
+	File = {:Users/wvaldar/Documents/MendeleyDesktop/2017/Soave, Sun/Soave, Sun - Biometrics - A generalized Levene's scale test for variance heterogeneity in the presence of sample correlation and group u.pdf:pdf},
+	Issn = {15410420},
+	Journal = {Biometrics},
+	Keywords = {Association studies,Heteroscedasticity,Joint location-scale test,Scale test},
+	Mendeley-Groups = {vQTL},
+	Number = {3},
+	Pages = {960--971},
+	Pmid = {28099998},
+	Title = {{A generalized Levene's scale test for variance heterogeneity in the presence of sample correlation and group uncertainty}},
+	Volume = {73},
+	Year = {2017},
+	Bdsk-Url-1 = {https://doi.org/10.1111/biom.12651}}
+
+@article{Soave2015,
+	Abstract = {Gene-based, pathway, and other multivariate association methods are motivated by the possibility of GxG and GxE interactions; however, accounting for such interactions is limited by the challenges associated with adequate modeling information. Here we propose an easy-to-implement joint location-scale (JLS) association testing framework for single-variant and multivariate analysis that accounts for interactions without explicitly modeling them. We apply the JLS method to a gene-set analysis of cystic fibrosis (CF) lung disease, which is influenced by multiple environmental and genetic factors. We identify and replicate an association between the constituents of the apical plasma membrane and CF lung disease (p = 0.0099 and p = 0.0180, respectively) and highlight a role for the SLC9A3-SLC9A3R1/2-EZR complex in contributing to CF lung disease. Many association studies could benefit from re-analysis with the JLS method that leverages complex genetic architecture for SNP, gene, and pathway identification. Analytical verification, simulation, and additional proof-of-principle applications support our approach.},
+	Author = {Soave, David and Corvol, Harriet and Panjwani, Naim and Gong, Jiafen and Li, Weili and Bo{\"{e}}lle, Pierre Yves and Durie, Peter R. and Paterson, Andrew D. and Rommens, Johanna M. and Strug, Lisa J. and Sun, Lei},
+	Date-Added = {2018-07-12 14:58:15 +0000},
+	Date-Modified = {2018-07-12 14:58:15 +0000},
+	Doi = {10.1016/j.ajhg.2015.05.015},
+	File = {:Users/wvaldar/Documents/MendeleyDesktop/2015/Soave et al/Soave et al. - American Journal of Human Genetics - A Joint Location-Scale Test Improves Power to Detect Associated SNPs, Gene Sets, and.pdf:pdf},
+	Isbn = {0002-9297},
+	Issn = {15376605},
+	Journal = {American Journal of Human Genetics},
+	Keywords = {GxE interaction,GxG interaction,HbA1c level,complex traits,cystic fibrosis,multivariate model,pathway,type 1 diabetes,variance tests},
+	Mendeley-Groups = {vQTL},
+	Number = {1},
+	Pages = {125--138},
+	Pmid = {26140448},
+	Title = {{A Joint Location-Scale Test Improves Power to Detect Associated SNPs, Gene Sets, and Pathways}},
+	Volume = {97},
+	Year = {2015},
+	Bdsk-Url-1 = {https://doi.org/10.1016/j.ajhg.2015.05.015}}
 
 @article{Purcell07,
 	Abstract = {Whole-genome association studies (WGAS) bring new computational, as well as analytic, challenges to researchers. Many existing genetic-analysis tools are not designed to handle such large data sets in a convenient manner and do not necessarily exploit the new opportunities that whole-genome data bring. To address these issues, we developed PLINK, an open-source C/C++ WGAS tool set. With PLINK, large data sets comprising hundreds of thousands of markers genotyped for thousands of individuals can be rapidly manipulated and analyzed in their entirety. As well as providing tools to make the basic analytic steps computationally efficient, PLINK also supports some novel approaches to whole-genome data that take advantage of whole-genome coverage. We introduce PLINK and describe the five main domains of function: data management, summary statistics, population stratification, association analysis, and identity-by-descent estimation. In particular, we focus on the estimation and use of identity-by-state and identity-by-descent information in the context of population-based whole-genome studies. This information can be used to detect and correct for population stratification and to identify extended chromosomal segments that are shared identical by descent between very distantly related individuals. Analysis of the patterns of segmental sharing has the potential to map disease loci that contain multiple rare variants in a population-based linkage analysis.},

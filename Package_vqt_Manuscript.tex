@@ -17,7 +17,7 @@
 \affil[$\ddagger$]{and Lineberger Comprehensive Cancer Center, University of North Carolina,
     Chapel Hill, NC}
 
-\keywords{heteroskedastic regression, mvQTL, variance heterogeneity, DGLM}
+\keywords{heteroscedastic regression, mvQTL, variance heterogeneity, DGLM}
 
 \runningtitle{Package vqtl} % For use in the footer 
 
@@ -63,17 +63,30 @@ Because it is inter-operable with the popular \texttt{qtl} package and uses many
 
 \section*{Introduction}
 
-Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
-However, it has long been recognized that the extent of residual variation is itself a heritable trait \citep{Falconer1965,Lynch1998}.
-This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010} and demonstrated in inbred model organisms \citep{Sorensen2015,Ayroles2015} and crops \citep{Yang2012-aw,Forsberg2015} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
-Recent work, has begun to recognize heterogeneous residual variance in mapping efforts by identifying an additional type of QTL---those that influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}. 
+Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'' (mQTL), regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the instrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
+It has long been recognized, however, that the residual variance is itself heritable \WV{\citep{Falconer1965,Lynch1998}}{Do they definitely talk about this?}.
+This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010}, demonstrated in inbred model organisms \WV{\citep{Sorensen2015}}{Seems a bit recent} and crops \citep{Yang2012-aw}, and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
+%To help dissect the genetic basis, 
+Correspondingly, several groups have proposed statistical methods for mapping QTL controling the extent of this residual variance, these sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}\WV{\citep{Soave2017,Dumitrascu2018}}{add Englehardt, Soave?}.
 
-Although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Wei2016-lt,Wang2017,Wei2017-tt}, statistical tools for this purpose remain heterogeneous.
-We have developed a standardized method for QTL mapping in experimental crosses that simultanously model mean and variance effects in order to detect mQTL, vQTL and a generalization of the two that we term ``mvQTL''.
-Our approach, which we term ``mean-variance QTL mapping'', can currently be applied to F2 intercross and backcross designs.
-In two companion articles, we characterize this method and competitors in the setting where a background factor drives variance heterogeneity (\CortyMethodsPaper), and use it to discover new QTL from two existing data resources (\CortyReanalysisPaper).
+% Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
+% However, it has long been recognized that the extent of residual variation is itself a heritable trait \citep{Falconer1965,Lynch1998}.
+% This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010} and demonstrated in inbred model organisms \citep{Sorensen2015,Ayroles2015} and crops \citep{Yang2012-aw,Forsberg2015} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
+% Recent work, has begun to recognize heterogeneous residual variance in mapping efforts by identifying an additional type of QTL---those that influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}. 
 
-Here, we provide a practical guide to the approach using its associated \texttt{R} package \texttt{vqtl}, which implements mean-variance QTL mapping and is inter-operable with the established \texttt{qtl} package \citep{Broman2003}.
+Although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Forsberg2015,Wei2016-lt,Wang2017,Wei2017-tt}, statistical tools for this purpose remain heterogeneous.
+We have developed a standardized method for QTL mapping in experimental crosses, in particular F2 intercrosses and backcrosses, that simultanously models mean and variance effects in order to detect mQTL, vQTL and a generalization of the two that we term ``mvQTL''.
+Our approach, which we term ``mean-variance QTL mapping'', is based on a double generalized linear model (DGLM) \citep{Smyth1989}, following the proposed use in this context by \citet{Ronnegard2011a}.
+In the first of two companion articles, we characterize the method and competitors in the setting where variance heterogeneity is driven by a background factor, such as sex, batch or housing, and show that modeling these (external) variance effects improves power to detect mQTL, vQTL and mvQTL (\CortyMethodsPaper). 
+In the second companion paper, we demonstrate the approach on two existing datasets and discover new mQTL and vQTL (\CortyReanalysisPaper). 
+
+Here, we provide a practical guide to the approach using its associated \texttt{R} package \texttt{vqtl},
+%
+%In two companion articles, we characterize the method and competitors in the setting where variance heterogeneity is driven by a background factor (\CortyMethodsPaper),  and use it to discover new QTL from two existing data resources (\CortyReanalysisPaper).
+%
+%The R package \texttt{vqtl} implements mean-variance QTL mapping
+which is currently suitable for F2 intercrosses and backcrosses, and is inter-operable with the well-established mean QTL-oriented package for this purpose, \texttt{qtl} \citep{Broman2003}.
+%We introduce the \texttt{vqtl} package as follows.
 First, to generate illustrative data, we simulate an F2 intercross and four phenotypes: one phenotype determined entirely by random noise, and one with each of the three kinds of QTL.
 On each phenotype we then conduct a genome scan using standard approximations to interval mapping \citep{Lander1989a,Martinez1992}, and mean-variance QTL mapping, which includes a test for mQTL, a test for vQTL, and a test for mvQTL.
 The association statistics of all four tests are initially plotted in LOD score units, with drawbacks of this plotting unit discussed; then permutation scans are used to determine empirically-adjusted $p$-values, and plotting in these units is shown to to make the results of the four tests more easily comparable.
@@ -442,9 +455,7 @@ The package \texttt{vqtl} and its documentation are freely available on \texttt{
 % The bootstrap function, \texttt{scanonevar.boot}, executes bootstrap resampling to assess the genetic precision of a QTL and extablish a confidence interval. 
 
 \section{Acknowledgments}
-This work was primarily funded by National Institutes of General Medical Sciences (NIGMS) grants to WV (R01-GM104125,R35-GM127000) and a National Institutes of Mental Health grant to RWC (F30-MH108265).
-RWC received additional support from NIGMS grant T32-GM067553 and National Library of Medicine grant T32-LM012420.
-
+This work was funded by National Institutes of General Medical Sciences grants R01-GM104125 (RWC,WV), R35-GM127000 (RWC,WV), T32-GM067553 (RWC); National Heart, Lung and Blood Institute grant R21 HL126045 (RWC,WV); National Library of Medicine grant T32-LM012420 (RWC); and a National Institute of Mental Health grant F30-MH108265 (RWC).
 
 \bibliography{10_Aim1,wv}
 
