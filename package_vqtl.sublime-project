@@ -5,7 +5,7 @@
 			"path": "."
 		}
 	],
-	"settings": {
-        "TEXroot": "Package_vqt_Manuscript.tex"
-    }
+	// "settings": {
+ //        "TEXroot": "Package_vqt_Manuscript.tex"
+ //    }
 }
