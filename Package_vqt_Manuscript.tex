@@ -81,7 +81,7 @@ In the first of two companion articles, we characterize the method and competito
 In the second companion paper, we demonstrate the approach on two existing datasets and discover new mQTL and vQTL (\CortyReanalysisPaper). 
 
 Here, we provide a practical guide to the approach using its associated \texttt{R} package \texttt{vqtl},
-\WV{}{Should we be using ``R/vqtl'' and ``R/qtl'' terminology?}
+% \WV{}{Should we be using ``R/vqtl'' and ``R/qtl'' terminology?}
 %
 %In two companion articles, we characterize the method and competitors in the setting where variance heterogeneity is driven by a background factor (\CortyMethodsPaper),  and use it to discover new QTL from two existing data resources (\CortyReanalysisPaper).
 %
@@ -108,8 +108,8 @@ Last, we benchmark performance, using one of the datasets examined in \CortyRean
 
 \section*{Example data: Simulated F2 Intercross}
 
-To illustrate the use of the \texttt{vqtl} package, we first simulated an example F2 intercross using \texttt{R/qtl} package \citep{Broman2003}, on which \texttt{vqtl} is based.
-This cross consisted of 200 male and 200 female F2 offspring, with 3 chromosomes of length 100 cM, each tagged by 11 equally-spaced markers and estimated genotype probabilities at 2cM intervals with \texttt{R/qtl}'s hidden Markov model. We then generated four phenotypes:
+To illustrate the use of the \texttt{vqtl} package, we first simulated an example F2 intercross using the \texttt{R} package {qtl} \citep{Broman2003}, on which \texttt{vqtl} is based.
+This cross consisted of 200 male and 200 female F2 offspring, with 3 chromosomes of length 100 cM, each tagged by 11 equally-spaced markers and estimated genotype probabilities at 2cM intervals with \texttt{qtl}'s hidden Markov model. We then generated four phenotypes:
 \begin{enumerate}
 	\item \texttt{phenotype1} consists only of random noise and will serve as an example of negative results for all tests.
 	\item \texttt{phenotype2} has an mQTL that explains 4\% of phenotype variance at the center of chromosome one.
@@ -124,7 +124,7 @@ All the same analyses and plots that are shown for \texttt{phenotype1} through \
 
 \section*{Scan the Genome}
 
-The central function for genetic mapping in package \texttt{R/qtl} is \texttt{scanone} \citep{Broman2003}.
+The central function for genetic mapping in package \texttt{qtl} is \texttt{scanone} \citep{Broman2003}.
 Analogously, the central function for mean-variance QTL mapping in package \texttt{vqtl} is \texttt{scanonevar}, building on an early version of \texttt{scanonevar} in package \texttt{qtl}.
 It takes three required inputs:
 \begin{enumerate}
@@ -400,7 +400,7 @@ The slope (minutes per locus) depends on the population size, ranging from $\app
 Based on these benchmarks, the workflow presented here is practical for QTL mapping F2 intercross and similar populations on modern, multi-core scientific computers.
 Populations with many recombinations, where dense genotyping arrays that interrogate $\textgreater$ 10,000 loci, could not be practically analyzed with package \texttt{vqtl} in this way, although it is likely that statistical and computational steps could be taken to make such studies feasible:
 statistically, techniques could be used that allow for large-scale analysis without permutation testing \citep{Efron2004};
-computationally, the software could be changed to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
+computationally, the software could be modified to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
 
 % Performance benchmarks of package \texttt{vqtl} are presented in \autoref{fig:benchmark_kumar} and \autoref{fig:benchmark_sim_cross}.
 
