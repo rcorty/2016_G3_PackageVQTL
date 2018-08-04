@@ -64,17 +64,17 @@ Because it is inter-operable with the popular \texttt{qtl} package and uses many
 \section*{Introduction}
 
 Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'' (mQTL), regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
-It has long been recognized, however, that the residual variance is itself heritable \citep{Falconer1965,Lynch1998}.
-This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010}, demonstrated in inbred model organisms \citep{Sorensen2015} and crops \citep{Yang2012-aw}, and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
+It has long been recognized, however, that the residual variance is itself heritable \citep{Falconer1965,Lynch1998}, a
+phenomenon that has been described theoretically \citep{Hill2004-uo,Hill2010}, demonstrated in inbred model organisms \citep{Sorensen2015} and crops \citep{Yang2012-aw}, and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
 %To help dissect the genetic basis, 
 Correspondingly, several groups have proposed statistical methods for mapping QTL controling the extent of this residual variance, these sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014,Soave2017,Dumitrascu2018}.
+However, although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Forsberg2015,Wei2016-lt,Wang2017,Wei2017-tt}, statistical tools for this purpose remain heterogeneous.
 
 % Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'', regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
 % However, it has long been recognized that the extent of residual variation is itself a heritable trait \citep{Falconer1965,Lynch1998}.
 % This phenomenon has been described theoretically \citep{Hill2004-uo,Hill2010} and demonstrated in inbred model organisms \citep{Sorensen2015,Ayroles2015} and crops \citep{Yang2012-aw,Forsberg2015} and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
 % Recent work, has begun to recognize heterogeneous residual variance in mapping efforts by identifying an additional type of QTL---those that influence the extent of residual variance, sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014}. 
 
-Although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Forsberg2015,Wei2016-lt,Wang2017,Wei2017-tt}, statistical tools for this purpose remain heterogeneous.
 We have developed a standardized method for QTL mapping in experimental crosses, in particular F2 intercrosses and backcrosses, that simultanously models mean and variance effects in order to detect mQTL, vQTL and a generalization of the two that we term ``mvQTL''.
 Our approach, which we term ``mean-variance QTL mapping'', is based on a double generalized linear model (DGLM) \citep{Smyth1989}, following the proposed use in this context by \citet{Ronnegard2011a}.
 In the first of two companion articles, we characterize the method and competitors in the setting where variance heterogeneity is driven by a background factor, such as sex, batch or housing, and show that modeling these (external) variance effects improves power to detect mQTL, vQTL and mvQTL (\CortyMethodsPaper). 
