@@ -16,11 +16,6 @@
 \newcommand{\RC}[2]{\textcolor{purple}{#1\footnote{\textcolor{purple}{#2}}}}
 \newcommand{\reply}{\ensuremath{\hookrightarrow}\xspace}
 
-\newcommand{\CortyRPaper}{\textcolor{purple}{Corty and Valdar 2018+ [r/vqtl]}\xspace}
-\newcommand{\CortyReanalysisPaper}{\textcolor{purple}{Corty \emph{et al} 2018+}\xspace}
-\newcommand{\CortyMethodsPaper}{\textcolor{purple}{Corty and Valdar 2018+ [BVH]}\xspace}
-
-
 % Bibliography
 \usepackage{natbib} \bibpunct{(}{)}{;}{author-year}{}{,}
 \bibliographystyle{genetics}
@@ -54,9 +49,9 @@
 \newcounter{EdQuestionNum}[EditorNum]
 \setcounter{EdQuestionNum}{0}
 
-\newcommand{\ReviewerQuestion}[1]{
+\newcommand{\ReviewerQuestion}[2]{
   \vspace{5pt}\goodbreak
-  \noindent\fbox{Reviewer:} #1
+  \noindent\fbox{Reviewer:~#1} #2
   \normalfont\par
 }
 \newcommand{\EditorQuestion}[1]{
@@ -66,12 +61,28 @@
 }
 \newcommand{\Response}[1]{
   \goodbreak
-  \textcolor{blue}{#1}
+  \textcolor{blue!50!black}{#1}
   \normalfont\par
 }
 
+\newcommand{\Line}[1]{\textbf{line #1}\xspace} % to highlight for our use, in case line numbers change significantly and we have to correct.
+\newcommand{\Lines}[1]{\textbf{line #1}\xspace} %
+\newcommand{\CortyRPaper}{Corty and Valdar (2018+) ``vqtl: An R package for mean-variance QTL mapping'' G3/2018/200159\xspace}
+\newcommand{\CortyReanalysisPaper}{Corty \emph{et. al.} (2018+) ``Mean-variance QTL mapping identifies novel QTL for circadian activity and exploratory behavior in mice'' G3/2018/200194\xspace}
+\newcommand{\CortyMethodsPaper}{Corty and Valdar (2018+) ``QTL mapping on a background of variance heterogeneity'' G3/2018/200195\xspace}
+
+
 \begin{document}
 \reversemarginpar
+
+\section*{Introduction}
+
+This response refers to paper number \textbf{3} of the 3 co-submitted papers:
+\begin{enumerate}
+\item \CortyMethodsPaper
+\item \CortyReanalysisPaper
+\item \textbf{\CortyRPaper}
+\end{enumerate}
 
 \section*{Editor Comments}
 
@@ -81,7 +92,7 @@
   Now that you have all three manuscripts potentially going forward for publication in G3, they can be more tightly linked.
 }
 \Response{
-  We have updated the manuscripts such that each one refers to the other two in the introduction and discussion.
+  We have updated the manuscripts such that each one refers to the other two in the introduction and discussion. We have also edited the introductions so that they are less duplicative and each is more clearly focused on its own distinct contributions.
 }
 
 \EditorQuestion{
@@ -89,11 +100,9 @@
    So the software paper can include those files and refer to the other manuscript for details.
 }
 \Response{
-  We have incorporated this recommendation, using the dataset from Kumar et al. 2013 that was used in one of the case studies in the manuscript titled ``Mean-Variance QTL Mapping Identifies Novel QTL for Circadian Activity and Exploratory Behavior in Mice''.
+  We have incorporated this recommendation, using the dataset from Kumar et al. 2013 that was used in one of the case studies in the co-submitted manuscript, \CortyReanalysisPaper.
   The time required to analyze this dataset, according to number of computer cores available and number of permutations desired, is described in the ``Performance Benchmarks'' section of the software paper and the relevant files are included in its Zenodo repository.
 }
-
-
 
 \subsection*{Issues Specific to this Manuscript}
 
@@ -134,7 +143,7 @@
 
 \section*{Reviewer 1 Comments}
 
-\ReviewerQuestion{
+\ReviewerQuestion{1.1}{
   The authors mention ``in almost all traits of interest in human health and disease''.
   The detection of QTL has also been widely used in plant and animal populations.
 }
@@ -144,7 +153,7 @@
   To address the reviewer's concern, however, we have added references to the next paragraph in the introduction (where the heritability of phenotype variance is discussed) that rely heavily on studies of model organisms, livestock and crops.
 }
 
-\ReviewerQuestion{
+\ReviewerQuestion{1.2}{
   The authors used a set of simulated data with 3 chromosomes and 11 equally spaced markers.
   I would like to see an example with a larger genotype data set.
 }
@@ -155,7 +164,7 @@
 }
 
 
-\ReviewerQuestion{
+\ReviewerQuestion{1.3}{
   The CPU time is indicated for the data set of the example.
   I would like to have the CPU time information in a more realistic data set.
   Perhaps authors can use a free data set from the web.
@@ -178,7 +187,7 @@
   This addition can be found on page 4.
 }
 
-\ReviewerQuestion{
+\ReviewerQuestion{1.4}{
   In the simulation, the authors should indicate the magnitude of the genetic variance explained by the QTL.
 }
 \Response{
@@ -187,7 +196,7 @@
 }
 
 
-\ReviewerQuestion{
+\ReviewerQuestion{1.5}{
   I think the authors should also indicate if the software is capable in terms of computing power to analyze the data from SNP genotyping devices or even sequencing.
 }
 
