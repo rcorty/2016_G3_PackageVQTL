@@ -53,11 +53,10 @@ Because it is inter-operable with the popular \texttt{qtl} package and uses many
 \section*{Introduction}
 
 Traditional quantitative trait locus (QTL) analyses have focused on discovering ``mean QTL'' (mQTL), regions of the genome where allelic variation drives heterogeneity of phenotype mean, while assuming that the residual variance, that is, the intrinsic stability or noisiness of the phenotype, is identical for every individual in the mapping population.
-It has long been recognized, however, that the residual variance is itself heritable \citep{Falconer1965,Lynch1998}, a
-phenomenon that has been described theoretically \citep{Hill2004-uo,Hill2010}, demonstrated in inbred model organisms \citep{Sorensen2015} and crops \citep{Yang2012-aw}, and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008-ie}.
-%To help dissect the genetic basis, 
-Correspondingly, several groups have proposed statistical methods for mapping QTL controlling the extent of this residual variance, these sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012,Cao2014,Soave2017,Dumitrascu2018}.
-However, although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Forsberg2015,Wei2016-lt,Wang2017,Wei2017-tt}, statistical tools for this purpose remain heterogeneous. 
+It has long been recognized, however, that the residual variance is itself heritable \citep{Falconer1965,Lynch1998a}, a
+phenomenon that has been described theoretically \citep{Hill2004,Hill2010}, demonstrated in inbred model organisms \citep{Sorensen2015} and crops \citep{Yang2012}, and exploited in livestock improvement efforts \citep{Mulder2008,Ibanez-Escriche2008a}.
+Correspondingly, several groups have proposed statistical methods for mapping QTL controlling the extent of this residual variance, these sometimes termed ``variance QTL'' (vQTL) \citep{Pare2010,Ronnegard2011a,Ronnegard2012a,Cao2014,Soave2017,Dumitrascu2018}.
+However, although detection of vQTL has started to enter the mainstream of genetic analysis \citep{Yang2012,Hulse2013,Ayroles2015,Forsberg2015,Wei2016,Wang2017,Wei2017}, statistical tools for this purpose remain heterogeneous. 
 
 We have developed a standardized method for QTL mapping in experimental crosses, in particular F2 intercrosses and backcrosses, that simultaneously models mean and variance effects in order to detect mQTL, vQTL and a generalization of the two that we term ``mvQTL''.
 Our approach, which we term ``mean-variance QTL mapping'', is based on a double generalized linear model (DGLM) \citep{Smyth1989}, following the proposed use in this context by \citet{Ronnegard2011a}.
@@ -293,7 +292,7 @@ The slope (minutes per locus) depends on the population size, ranging from $\app
 Based on these benchmarks, the workflow presented here is practical for QTL mapping F2 intercross and similar populations on modern, multi-core scientific computers.
 Populations with many recombinations, where dense genotyping arrays that interrogate $\textgreater$ 10,000 loci, could not be practically analyzed with package \texttt{vqtl} in this way, although it is likely that statistical and computational steps could be taken to make such studies feasible:
 statistically, techniques could be used that allow for large-scale analysis without permutation testing \citep{Efron2004};
-computationally, the software could be modified to run on a computer cluster, rather than on a single computer \citep{Jette2003a,Marchand2017}.
+computationally, the software could be modified to run on a computer cluster, rather than on a single computer \citep{Jette2003,Marchand2017}.
 
 \section*{Conclusion}
 
@@ -309,7 +308,7 @@ The package \texttt{vqtl} and its documentation are freely available on \texttt{
 \section{Acknowledgments}
 This work was funded by National Institutes of General Medical Sciences grants R01-GM104125 (RWC,WV), R35-GM127000 (RWC,WV), T32-GM067553 (RWC); National Heart, Lung and Blood Institute grant R21 HL126045 (RWC,WV); National Library of Medicine grant T32-LM012420 (RWC); and a National Institute of Mental Health grant F30-MH108265 (RWC).
 
-\bibliography{10_Aim1,wv}
+\bibliography{10_Aim1}
 
 
 \clearpage
